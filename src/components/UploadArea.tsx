@@ -146,7 +146,7 @@ export default function UploadArea() {
               </div>
 
               <h4 style="margin-bottom: 1rem;">Possibilities</h4>
-              <div class="suggestions-grid" style="display: grid; gap: 1rem;">
+              <div class="suggestions-grid" style="display: grid; gap: 1rem; grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));">
                 <For each={result()?.suggestions}>
                   {(suggestion) => (
                     <div

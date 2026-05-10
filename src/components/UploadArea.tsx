@@ -1,6 +1,7 @@
 import { createSignal, Show, For } from "solid-js";
 import { Motion } from "solid-motionone";
 import { analyzeImage, type AnalysisResult } from "../ai/gemini";
+import styles from "./UploadArea.module.scss";
 
 export default function UploadArea() {
   const [isDragging, setIsDragging] = createSignal(false);
@@ -61,8 +62,8 @@ export default function UploadArea() {
 
   return (
     <Motion.div
-      class="upload-area"
-      classList={{ dragging: isDragging() }}
+      class={styles.uploadArea}
+      classList={{ [styles.dragging]: isDragging() }}
       animate={{ scale: isDragging() ? 1.05 : 1 }}
       transition={{ duration: 0.3 }}
     >
@@ -79,19 +80,19 @@ export default function UploadArea() {
 
       {!uploadedImage() ? (
         <div
-          class="upload-prompt"
+          class={styles.uploadPrompt}
           onClick={handleClick}
           onDragOver={handleDragOver}
           onDragLeave={handleDragLeave}
           onDrop={handleDrop}
         >
-          <div class="upload-icon">📷</div>
+          <div class={styles.uploadIcon}>📷</div>
           <h3>Scan Your Item</h3>
           <p>Drag & drop an image or click to upload</p>
-          <div class="upload-button">Choose File</div>
+          <div class={styles.uploadButton}>Choose File</div>
         </div>
       ) : (
-        <div class="image-preview">
+        <div class={styles.imagePreview}>
           <Motion.img
             src={uploadedImage()!}
             alt="Uploaded item"
@@ -100,21 +101,17 @@ export default function UploadArea() {
             transition={{ duration: 0.5 }}
           />
           {isAnalyzing() && (
-            <div class="analyzing-overlay">
-              <div class="scan-line"></div>
+            <div class={styles.analyzingOverlay}>
+              <div class={styles.scanLine}></div>
               <p>AI is analyzing...</p>
             </div>
           )}
 
           <Show when={error()}>
-            <div
-              class="error-message"
-              style="color: #ff4d4f; margin-top: 1rem;"
-            >
+            <div class={styles.errorMessage}>
               {error()}
               <button
                 onClick={() => setUploadedImage(null)}
-                style="margin-left: 1rem;"
               >
                 Try Again
               </button>
@@ -123,47 +120,33 @@ export default function UploadArea() {
 
           <Show when={result()}>
             <Motion.div
-              class="analysis-results"
+              class={styles.analysisResults}
               initial={{ opacity: 0, y: 20 }}
               animate={{ opacity: 1, y: 0 }}
               transition={{ duration: 0.5, delay: 0.2 }}
-              style="margin-top: 2rem; text-align: left; background: rgba(255,255,255,0.05); padding: 1.5rem; border-radius: 12px; backdrop-filter: blur(10px);"
             >
-              <h3 style="margin-bottom: 1rem; color: #3fb950;">AI Insights</h3>
-              <div style="display: flex; gap: 1rem; margin-bottom: 1.5rem;">
-                <div
-                  class="badge"
-                  style="background: rgba(63, 185, 80, 0.2); padding: 0.5rem 1rem; border-radius: 20px; font-size: 0.9rem;"
-                >
+              <h3>AI Insights</h3>
+              <div class={styles.badges}>
+                <div class={styles.badge}>
                   <strong>Material:</strong> {result()?.materialType}
                 </div>
-                <div
-                  class="badge"
-                  style="background: rgba(63, 185, 80, 0.2); padding: 0.5rem 1rem; border-radius: 20px; font-size: 0.9rem;"
-                >
+                <div class={styles.badge}>
                   <strong>Condition:</strong> {result()?.condition}
                 </div>
               </div>
 
-              <h4 style="margin-bottom: 1rem;">Possibilities</h4>
-              <div class="suggestions-grid" style="display: grid; gap: 1rem; grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));">
+              <h4>Possibilities</h4>
+              <div class={styles.suggestionsGrid}>
                 <For each={result()?.suggestions}>
                   {(suggestion) => (
-                    <div
-                      class="suggestion-card"
-                      style="background: rgba(255,255,255,0.1); padding: 1rem; border-radius: 8px;"
-                    >
-                      <h5 style="margin: 0 0 0.5rem 0; font-size: 1.1rem;">
+                    <div class={styles.suggestionCard}>
+                      <h5>
                         {suggestion.title}{" "}
-                        <span style="font-size: 0.8rem; opacity: 0.7; font-weight: normal;">
-                          ({suggestion.type})
-                        </span>
+                        <span>({suggestion.type})</span>
                       </h5>
-                      <p style="margin: 0 0 0.5rem 0; font-size: 0.95rem; opacity: 0.9;">
-                        {suggestion.description}
-                      </p>
+                      <p>{suggestion.description}</p>
                       <Show when={suggestion.impact}>
-                        <p style="margin: 0; font-size: 0.85rem; color: #3fb950;">
+                        <p class={styles.impact}>
                           🌱 {suggestion.impact}
                         </p>
                       </Show>
@@ -177,7 +160,6 @@ export default function UploadArea() {
                   setUploadedImage(null);
                   setResult(null);
                 }}
-                style="margin-top: 1.5rem; width: 100%; padding: 0.75rem; border-radius: 8px; border: none; background: #3fb950; color: white; cursor: pointer; font-weight: bold;"
               >
                 Scan Another Item
               </button>

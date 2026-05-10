@@ -40,6 +40,44 @@ Not everything discarded has lost its value. CETRA is an AI-powered sustainabili
     pnpm start
     ```
 
+7. **Deploy to production**
+
+    For production deployment, ensure environment variables are set:
+
+    **Option A: Using Docker environment variables**
+    ```bash
+    docker run -e VITE_GEMINI_API_KEY=your_key_here \
+                -e VITE_GEMINI_MODEL_NAME=gemini-2.5-flash-lite \
+                -e VITE_FIREBASE_API_KEY=your_firebase_key \
+                your-image-name
+    ```
+
+    **Option B: Using docker-compose.yml**
+    ```yaml
+    version: '3.8'
+    services:
+      cetra:
+        build: .
+        ports:
+          - "8080:8080"
+        environment:
+          - VITE_GEMINI_API_KEY=your_gemini_api_key
+          - VITE_GEMINI_MODEL_NAME=gemini-2.5-flash-lite
+          - VITE_FIREBASE_API_KEY=your_firebase_api_key
+          # ... other Firebase variables
+    ```
+
+    **Option C: Using deployment platform environment variables**
+    Set the following environment variables in your deployment platform (Vercel, Netlify, Railway, etc.):
+    - `VITE_GEMINI_API_KEY`
+    - `VITE_GEMINI_MODEL_NAME`
+    - `VITE_FIREBASE_API_KEY`
+    - `VITE_FIREBASE_AUTH_DOMAIN`
+    - `VITE_FIREBASE_PROJECT_ID`
+    - `VITE_FIREBASE_STORAGE_BUCKET`
+    - `VITE_FIREBASE_MESSAGING_SENDER_ID`
+    - `VITE_FIREBASE_APP_ID`
+
 ## Tech Stack
 
 - **Frontend**: SolidStart, SolidJS, TypeScript, SCSS Modules

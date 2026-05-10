@@ -25,7 +25,8 @@ export interface Suggestion {
   imageStatus?: "idle" | "loading" | "done" | "error";
 }
 
-const MODEL_NAME = import.meta.env.VITE_GEMINI_MODEL_NAME;
+const MODEL_NAME = import.meta.env.VITE_GEMINI_MODEL_NAME || 'gemini-2.5-flash-lite';
+const API_KEY = import.meta.env.VITE_GEMINI_API_KEY;
 
 function cleanJsonResponse(text: string) {
   return text.replace(/```json\n?|\n?```/g, "").trim();
@@ -35,6 +36,10 @@ export async function analyzeImage(
   imageBase64: string,
 ): Promise<AnalysisResult> {
   try {
+    if (!API_KEY) {
+      throw new Error('Gemini API key is not configured. Please set VITE_GEMINI_API_KEY environment variable.');
+    }
+
     const model = genAI.getGenerativeModel({
       model: MODEL_NAME,
     });
@@ -108,6 +113,15 @@ export async function analyzeImage(
     return parsed;
   } catch (error) {
     console.error("Gemini analyzeImage error:", error);
+
+    // Provide more specific error messages for common issues
+    if (error instanceof Error) {
+      if (error.message.includes('API key')) {
+        console.error('🔑 API Key Error: Gemini API key is missing or invalid');
+      } else if (error.message.includes('model name')) {
+        console.error('🤖 Model Error: Gemini model name is not configured');
+      }
+    }
 
     return {
       materialType: "unknown",

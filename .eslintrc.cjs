@@ -5,17 +5,17 @@ module.exports = {
     es2021: true,
     node: true,
   },
-  parser: '@typescript-eslint/parser',
+  parser: "@typescript-eslint/parser",
   parserOptions: {
     ecmaVersion: 2020,
-    sourceType: 'module',
+    sourceType: "module",
     jsx: true,
   },
-  plugins: ['@typescript-eslint'],
+  plugins: ["@typescript-eslint"],
   rules: {
     // Basic formatting - as requested
-    'semi': ['error', 'always'],
-    'quotes': ['error', 'double'],
-    'no-console': process.env.NODE_ENV === 'production' ? 'warn' : 'off',
+    "semi": ["error", "always"],
+    "quotes": ["error", "double"],
+    "no-console": process.env.NODE_ENV === "production" ? "warn" : "off",
   }
 };

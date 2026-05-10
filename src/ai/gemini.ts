@@ -11,6 +11,7 @@ export interface AnalysisResult {
 }
 
 export interface Suggestion {
+  id: string;
   type: "reuse" | "recipe" | "diy" | "resale" | "donation" | "recycling";
   title: string;
   description: string;
@@ -19,6 +20,9 @@ export interface Suggestion {
   tools?: string[];
   value?: string;
   impact?: string;
+  imagePrompt?: string;
+  imageUrl?: string;
+  imageStatus?: "idle" | "loading" | "done" | "error";
 }
 
 const MODEL_NAME = import.meta.env.VITE_GEMINI_MODEL_NAME;
@@ -54,7 +58,8 @@ export async function analyzeImage(
             "timeEstimate": "time estimate",
             "tools": ["tool1", "tool2"],
             "value": "estimated value",
-            "impact": "environmental impact"
+            "impact": "environmental impact",
+            "imagePrompt": "visual prompt for AI image generation"
           }
         ]
       }
@@ -91,8 +96,16 @@ export async function analyzeImage(
 
     const response = await result.response;
     const text = cleanJsonResponse(response.text());
+    const parsed = JSON.parse(text) as AnalysisResult;
+    
+    // Assign IDs and initial image status to suggestions
+    parsed.suggestions = parsed.suggestions.map((s) => ({
+      ...s,
+      id: Math.random().toString(36).substring(2, 9),
+      imageStatus: "idle",
+    }));
 
-    return JSON.parse(text);
+    return parsed;
   } catch (error) {
     console.error("Gemini analyzeImage error:", error);
 
@@ -103,6 +116,7 @@ export async function analyzeImage(
       recyclability: "medium",
       suggestions: [
         {
+          id: Math.random().toString(36).substring(2, 9),
           type: "diy",
           title: "Creative Upcycling Project",
           description:
@@ -112,8 +126,11 @@ export async function analyzeImage(
           tools: ["scissors", "glue"],
           value: "$5-10",
           impact: "Reduces waste and extends the life cycle of the material.",
+          imagePrompt: "futuristic eco-friendly upcycled object, realistic photography",
+          imageStatus: "idle",
         },
         {
+          id: Math.random().toString(36).substring(2, 9),
           type: "donation",
           title: "Donate to Community",
           description:
@@ -121,10 +138,25 @@ export async function analyzeImage(
           difficulty: "easy",
           timeEstimate: "10 minutes",
           impact: "Promotes reuse and reduces landfill waste.",
+          imagePrompt: "donated item in a modern pristine setting, soft lighting",
+          imageStatus: "idle",
         },
       ],
     };
   }
+}
+
+export async function generateSuggestionImage(prompt: string): Promise<string> {
+  // Mock function simulating an API call that takes time
+  return new Promise((resolve) => {
+    setTimeout(() => {
+      // In a real app, this would call Gemini's Imagen or another image generation API
+      // For now, we return a high-quality placeholder based on keywords or just a random nice image
+      // We use unsplash source with some nature/tech keywords for demonstration
+      const randomId = Math.floor(Math.random() * 1000);
+      resolve(`https://picsum.photos/seed/${randomId}/400/300`);
+    }, 2500); // Simulate 2.5s generation time
+  });
 }
 
 export async function generateTutorial(

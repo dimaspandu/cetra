@@ -1,0 +1,376 @@
+@import "../../styles/abstracts/variables";
+@import "../../styles/abstracts/mixins";
+
+.dashboardContainer {
+  display: grid;
+  grid-template-columns: 1fr;
+  gap: $space-xl;
+  max-width: 1400px;
+  margin: 0 auto;
+  padding: $space-md;
+
+  @include respond-to("desktop") {
+    grid-template-columns: 4fr 6fr;
+    align-items: start;
+    padding: $space-xl;
+  }
+}
+
+.panelGlass {
+  @include glassmorphism(15px, 0.03);
+  background: $gradient-surface;
+  border-radius: $radius-xl;
+  padding: $space-lg;
+  display: flex;
+  flex-direction: column;
+  gap: $space-lg;
+  min-height: 80vh;
+  position: relative;
+  overflow: hidden;
+  border: 1px solid rgba($secondary, 0.1);
+  box-shadow: $shadow-large;
+
+  &::before {
+    content: "";
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 1px;
+    background: linear-gradient(90deg, transparent, rgba($primary, 0.5), transparent);
+  }
+}
+
+.leftPanel {
+  @include respond-to("desktop") {
+    position: sticky;
+    top: $space-xl;
+  }
+}
+
+.rightPanel {
+  display: flex;
+  flex-direction: column;
+}
+
+.panelHeader {
+  display: flex;
+  justify-content: space-between;
+  align-items: flex-end;
+
+  h2 {
+    font-family: $font-family-primary;
+    color: $light;
+    margin: 0;
+    font-size: $text-xl;
+    font-weight: 500;
+  }
+
+  .subtext {
+    font-size: $text-sm;
+    color: $text-muted;
+    text-transform: uppercase;
+    letter-spacing: 1px;
+    display: block;
+    margin-bottom: $space-xs;
+  }
+
+  .glowText {
+    color: $primary;
+    text-shadow: 0 0 10px rgba($primary, 0.5);
+    font-size: $text-2xl;
+  }
+}
+
+.aiIcon {
+  font-size: 2rem;
+  background: rgba($primary, 0.1);
+  padding: $space-sm;
+  border-radius: $radius-md;
+  border: 1px solid rgba($primary, 0.2);
+}
+
+.uploadSection {
+  display: flex;
+  flex-direction: column;
+  flex-grow: 1;
+}
+
+.uploadPrompt {
+  border: 2px dashed rgba($primary, 0.3);
+  border-radius: $radius-lg;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  padding: $space-2xl $space-lg;
+  cursor: pointer;
+  transition: all $transition-normal;
+  flex-grow: 1;
+  min-height: 400px;
+  background: rgba(#0a0e17, 0.5);
+
+  &:hover,
+  &.dragging {
+    border-color: $primary;
+    background: rgba($primary, 0.05);
+    box-shadow: inset 0 0 20px rgba($primary, 0.1);
+  }
+
+  h3 {
+    color: $primary;
+    margin-bottom: $space-xs;
+    font-family: $font-family-heading;
+  }
+
+  p {
+    color: $text-muted;
+    margin-bottom: $space-xl;
+    text-align: center;
+  }
+}
+
+.uploadIconWrapper {
+  position: relative;
+  margin-bottom: $space-lg;
+
+  .icon {
+    font-size: 4rem;
+    position: relative;
+    z-index: 2;
+  }
+
+  .uploadIconGlow {
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    width: 80px;
+    height: 80px;
+    background: $primary;
+    filter: blur(40px);
+    opacity: 0.2;
+    z-index: 1;
+    border-radius: 50%;
+  }
+}
+
+.uploadButton {
+  @include button-primary;
+  background: rgba($primary, 0.1);
+  color: $primary;
+  border: 1px solid rgba($primary, 0.5);
+  padding: $space-sm $space-xl;
+
+  &:hover {
+    background: rgba($primary, 0.2);
+    box-shadow: $glow-primary;
+  }
+}
+
+.primaryButton {
+  @include button-primary;
+  width: 100%;
+  margin-top: $space-lg;
+  padding: $space-md;
+  font-size: $text-lg;
+  text-transform: uppercase;
+  letter-spacing: 1px;
+}
+
+.imagePreviewContainer {
+  display: flex;
+  flex-direction: column;
+  gap: $space-lg;
+  align-items: center;
+}
+
+.imageWrapper {
+  position: relative;
+  width: 100%;
+  border-radius: $radius-lg;
+  overflow: hidden;
+  border: 1px solid rgba($secondary, 0.3);
+  box-shadow: 0 0 30px rgba($secondary, 0.1);
+  aspect-ratio: 1;
+  background: #000;
+}
+
+.previewImage {
+  width: 100%;
+  height: 100%;
+  object-fit: contain;
+}
+
+.analyzingOverlay {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background: rgba(10, 14, 23, 0.4);
+  z-index: 10;
+  overflow: hidden;
+
+  .scanGrid {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background-image: linear-gradient(rgba($primary, 0.2) 1px, transparent 1px),
+      linear-gradient(90deg, rgba($primary, 0.2) 1px, transparent 1px);
+    background-size: 30px 30px;
+    background-position: center;
+  }
+
+  .scanLine {
+    position: absolute;
+    top: -5%;
+    left: 0;
+    width: 100%;
+    height: 10%;
+    background: linear-gradient(to bottom, transparent, rgba($primary, 0.8), transparent);
+    animation: scan 2.5s infinite linear;
+    box-shadow: 0 0 20px $primary;
+  }
+
+  .scanBadge {
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    background: rgba($dark, 0.8);
+    border: 1px solid $primary;
+    color: $primary;
+    padding: $space-xs $space-md;
+    border-radius: $radius-md;
+    font-family: $font-family-heading;
+    font-size: $text-sm;
+    letter-spacing: 2px;
+    box-shadow: $glow-primary;
+  }
+}
+
+@keyframes scan {
+  0% { top: -10%; }
+  100% { top: 110%; }
+}
+
+.previewActions {
+  text-align: center;
+  
+  .scanTitle {
+    color: $primary;
+    margin-bottom: $space-xs;
+  }
+
+  .scanDesc {
+    color: $text-muted;
+    font-size: $text-sm;
+    margin-bottom: $space-md;
+  }
+}
+
+.aiLogSection {
+  background: rgba(#0a0e17, 0.6);
+  border-radius: $radius-md;
+  padding: $space-md;
+  border: 1px solid rgba(255, 255, 255, 0.05);
+
+  h4 {
+    color: $text-muted;
+    font-size: $text-sm;
+    margin-bottom: $space-sm;
+    text-transform: uppercase;
+    letter-spacing: 1px;
+  }
+}
+
+.logTerminal {
+  font-family: monospace;
+  font-size: 0.85rem;
+  color: $light;
+  display: flex;
+  flex-direction: column;
+  gap: $space-xs;
+
+  span {
+    color: $text-muted;
+    margin-right: $space-xs;
+  }
+
+  p {
+    margin: 0;
+  }
+
+  .logActive {
+    color: $primary;
+    text-shadow: 0 0 5px rgba($primary, 0.5);
+  }
+
+  .logDim {
+    color: rgba($light, 0.3);
+  }
+}
+
+.insightsContent {
+  display: flex;
+  flex-direction: column;
+  gap: $space-lg;
+}
+
+.indicatorsSection {
+  h4 {
+    color: $light;
+    margin-bottom: $space-md;
+    font-weight: 500;
+  }
+}
+
+.badges {
+  display: flex;
+  flex-wrap: wrap;
+  gap: $space-md;
+}
+
+.badge {
+  display: flex;
+  align-items: center;
+  gap: $space-sm;
+  color: $text-muted;
+  font-size: $text-sm;
+
+  .badgeIcon {
+    font-size: 1.2rem;
+  }
+}
+
+.suggestionsGrid {
+  display: grid;
+  grid-template-columns: 1fr;
+  gap: $space-md;
+
+  @include respond-to("desktop") {
+    grid-template-columns: 1fr 1fr;
+  }
+}
+
+.emptyState {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  flex-grow: 1;
+  color: $text-muted;
+  opacity: 0.5;
+
+  .pulseOrb {
+    width: 60px;
+    height: 60px;
+    border-radius: 50%;
+    background: rgba($primary, 0.2);
+    @include glow-pulse;
+    margin-bottom: $space-lg;
+  }
+}

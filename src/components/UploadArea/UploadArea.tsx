@@ -1,0 +1,257 @@
+import { createSignal, Show, For } from "solid-js";
+import { Motion } from "solid-motionone";
+import {
+  analyzeImage,
+  type AnalysisResult,
+} from "../../ai/gemini";
+import SuggestionCard from "../SuggestionCard/SuggestionCard";
+import SustainabilityGauge from "../SustainabilityGauge/SustainabilityGauge";
+import styles from "./UploadArea.module.scss";
+
+export default function UploadArea() {
+  const [isDragging, setIsDragging] = createSignal(false);
+  const [uploadedImage, setUploadedImage] = createSignal<string | null>(null);
+  const [isAnalyzing, setIsAnalyzing] = createSignal(false);
+  
+  const [result, setResult] = createSignal<AnalysisResult | null>(null);
+  const [error, setError] = createSignal<string | null>(null);
+
+  let fileInput: HTMLInputElement | undefined;
+
+  const handleDragOver = (e: DragEvent) => {
+    e.preventDefault();
+    setIsDragging(true);
+  };
+
+  const handleDragLeave = (e: DragEvent) => {
+    e.preventDefault();
+    setIsDragging(false);
+  };
+
+  const handleDrop = (e: DragEvent) => {
+    e.preventDefault();
+    setIsDragging(false);
+    const files = e.dataTransfer?.files;
+    if (files && files[0]) {
+      handleFile(files[0]);
+    }
+  };
+
+  const handleFile = (file: File) => {
+    if (file.type.startsWith("image/")) {
+      const reader = new FileReader();
+      reader.onload = async (e) => {
+        const base64Image = e.target?.result as string;
+        setUploadedImage(base64Image);
+        setIsAnalyzing(true);
+        setError(null);
+        setResult(null);
+
+        try {
+          const analysis = await analyzeImage(base64Image);
+          setResult(analysis);
+
+          // TODO: Re-implement progressive image generation with signals
+          // generateImagesForSuggestions(analysis);
+        } catch (err) {
+          setError("Failed to analyze the image. Please try again.");
+          console.error(err);
+        } finally {
+          setIsAnalyzing(false);
+        }
+      };
+      reader.readAsDataURL(file);
+    }
+  };
+
+  // TODO: Re-implement with signals instead of store
+  // const generateImagesForSuggestions = (analysis: AnalysisResult) => {
+  //   analysis.suggestions.forEach(async (suggestion, index) => {
+  //     if (!suggestion.imagePrompt) return;
+  //     // Implementation needed
+  //   });
+  // };
+
+  const handleClick = () => {
+    fileInput?.click();
+  };
+
+  const reset = () => {
+    setUploadedImage(null);
+    setResult(null);
+  };
+
+  // Extract score logic from UI
+  const getSustainabilityScore = () => {
+    if (!result()) return 0;
+    const { recyclability, condition } = result()!;
+    let score = 50;
+    if (recyclability === "high") score += 30;
+    if (recyclability === "medium") score += 15;
+    if (condition === "excellent") score += 20;
+    if (condition === "good") score += 10;
+    return Math.min(100, score);
+  };
+
+  return (
+    <div class={styles.dashboardContainer}>
+      {/* LEFT PANEL */}
+      <div class={styles.leftPanel}>
+        <div class={styles.panelGlass}>
+          <div class={styles.panelHeader}>
+            <h2>AI Upload and Analysis</h2>
+            <div class={styles.aiIcon}>🧠</div>
+          </div>
+
+          <div class={styles.uploadSection}>
+            <input
+              ref={fileInput!}
+              type="file"
+              accept="image/*"
+              style="display: none"
+              onChange={(e) => {
+                const file = e.target.files?.[0];
+                if (file) handleFile(file);
+              }}
+            />
+
+            {!uploadedImage() ? (
+              <Motion.div
+                class={styles.uploadPrompt}
+                classList={{ [styles.dragging]: isDragging() }}
+                onClick={handleClick}
+                onDragOver={handleDragOver}
+                onDragLeave={handleDragLeave}
+                onDrop={handleDrop}
+                animate={{ scale: isDragging() ? 1.02 : 1 }}
+                transition={{ duration: 0.2 }}
+              >
+                <div class={styles.uploadIconWrapper}>
+                  <div class={styles.uploadIconGlow}></div>
+                  <span class={styles.icon}>📷</span>
+                </div>
+                <h3>Scan Your Item</h3>
+                <p>Drag & drop an image or click to upload</p>
+                <button class={styles.uploadButton}>Choose File</button>
+              </Motion.div>
+            ) : (
+              <div class={styles.imagePreviewContainer}>
+                <Motion.div
+                  class={styles.imageWrapper}
+                  initial={{ opacity: 0, scale: 0.9 }}
+                  animate={{ opacity: 1, scale: 1 }}
+                  transition={{ duration: 0.5 }}
+                >
+                  <img
+                    src={uploadedImage()!}
+                    alt="Uploaded item"
+                    class={styles.previewImage}
+                  />
+                  {isAnalyzing() && (
+                    <div class={styles.analyzingOverlay}>
+                      <div class={styles.scanGrid}></div>
+                      <div class={styles.scanLine}></div>
+                      <div class={styles.scanBadge}>SCANNING IN PROGRESS...</div>
+                    </div>
+                  )}
+                </Motion.div>
+
+                <div class={styles.previewActions}>
+                  <h3 class={styles.scanTitle}>Scan Your Item</h3>
+                  <p class={styles.scanDesc}>Drag & drop an image or click to upload</p>
+                  <button class={styles.uploadButton} onClick={handleClick}>
+                    Choose File
+                  </button>
+                </div>
+              </div>
+            )}
+          </div>
+
+          {/* AI Log */}
+          <div class={styles.aiLogSection}>
+            <h4>AI ANALYSIS LOG</h4>
+            <div class={styles.logTerminal}>
+              <Show when={uploadedImage()}>
+                <p><span>[00:01]</span> Model Loaded</p>
+                <Show when={isAnalyzing()}>
+                  <p class={styles.logActive}><span>[00:03]</span> Analyzing Material Composition...</p>
+                  <p class={styles.logActive}><span>[00:04]</span> Assessing Recyclability...</p>
+                </Show>
+                <Show when={result()}>
+                  <p><span>[00:05]</span> Analysis Complete.</p>
+                  <p><span>[00:05]</span> Generating Suggestions...</p>
+                </Show>
+              </Show>
+              <Show when={!uploadedImage()}>
+                <p class={styles.logDim}>Waiting for input...</p>
+              </Show>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      {/* RIGHT PANEL */}
+      <div class={styles.rightPanel}>
+        <div class={styles.panelGlass}>
+          <div class={styles.panelHeader}>
+            <span class={styles.subtext}>AI INSIGHTS & OPTIONS</span>
+            <h2 class={styles.glowText}>AI Insights</h2>
+          </div>
+
+          <Show when={error()}>
+            <div class={styles.errorMessage}>
+              <p>{error()}</p>
+              <button onClick={reset}>Try Again</button>
+            </div>
+          </Show>
+
+          <Show
+            when={result()}
+            fallback={
+              <div class={styles.emptyState}>
+                <div class={styles.pulseOrb}></div>
+                <p>Upload an item to generate insights</p>
+              </div>
+            }
+          >
+            <div class={styles.insightsContent}>
+              <div class={styles.scoreSection}>
+                <SustainabilityGauge score={getSustainabilityScore()} />
+              </div>
+
+              <div class={styles.indicatorsSection}>
+                <h4>Recyclability Indicators:</h4>
+                <div class={styles.badges}>
+                  <div class={styles.badge}>
+                    <span class={styles.badgeIcon}>♻️</span>
+                    <span>{result()?.materialType}</span>
+                  </div>
+                  <div class={styles.badge}>
+                    <span class={styles.badgeIcon}>✔️</span>
+                    <span>Condition: {result()?.condition}</span>
+                  </div>
+                  <div class={styles.badge}>
+                    <span class={styles.badgeIcon}>📦</span>
+                    <span>Usability: {result()?.usability}</span>
+                  </div>
+                </div>
+              </div>
+
+              <div class={styles.suggestionsGrid}>
+                <For each={result()?.suggestions}>
+                  {(suggestion) => (
+                    <SuggestionCard suggestion={suggestion} />
+                  )}
+                </For>
+              </div>
+
+              <button class={styles.primaryButton} onClick={reset}>
+                Upload New Item
+              </button>
+            </div>
+          </Show>
+        </div>
+      </div>
+    </div>
+  );
+}

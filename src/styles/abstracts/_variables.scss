@@ -1,23 +1,25 @@
 // Color palette
-$primary: #10b981; // emerald
-$secondary: #059669;
-$accent: #047857;
-$dark: #1f2937;
+$primary: #00ff88; // Neon green
+$secondary: #00e5ff; // Cyan
+$accent: #00ffcc;
+$dark: #0a0e17; // Dark navy background
+$surface: #131b2f; // Panel background
 $light: #f9fafb;
+$text-muted: #8b9bb4;
 
 // Gradients
 $gradient-primary: linear-gradient(135deg, $primary, $secondary);
-$gradient-dark: linear-gradient(135deg, $dark, #374151);
-$gradient-accent: linear-gradient(135deg, $accent, $primary);
+$gradient-dark: linear-gradient(135deg, $dark, #131b2f);
+$gradient-surface: linear-gradient(180deg, rgba(#131b2f, 0.8), rgba(#0a0e17, 0.9));
 
 // Shadows
-$shadow-soft: 0 4px 6px -1px rgba(0, 0, 0, 0.1);
-$shadow-medium: 0 10px 15px -3px rgba(0, 0, 0, 0.1);
-$shadow-large: 0 20px 25px -5px rgba(0, 0, 0, 0.1);
+$shadow-soft: 0 4px 6px -1px rgba(0, 0, 0, 0.3);
+$shadow-medium: 0 10px 15px -3px rgba(0, 0, 0, 0.5);
+$shadow-large: 0 20px 25px -5px rgba(0, 0, 0, 0.7);
 
 // Glow effects
-$glow-primary: 0 0 20px rgba(16, 185, 129, 0.5);
-$glow-accent: 0 0 20px rgba(4, 120, 87, 0.5);
+$glow-primary: 0 0 15px rgba(0, 255, 136, 0.3);
+$glow-accent: 0 0 15px rgba(0, 229, 255, 0.3);
 
 // Typography
 $font-family-primary: "Poppins", sans-serif;

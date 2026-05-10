@@ -1,0 +1,83 @@
+@import "../../styles/abstracts/variables";
+
+.gaugeContainer {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  padding: $space-md;
+  width: 100%;
+}
+
+.gaugeHeader {
+  display: flex;
+  gap: $space-sm;
+  font-family: $font-family-primary;
+  font-size: $text-sm;
+  color: $light;
+  margin-bottom: $space-lg;
+
+  .scoreText {
+    color: $primary;
+    font-weight: 600;
+  }
+}
+
+.svgWrapper {
+  position: relative;
+  width: 200px;
+  max-width: 100%;
+}
+
+.gaugeSvg {
+  width: 100%;
+  overflow: visible;
+}
+
+.bgArc {
+  stroke: rgba(255, 255, 255, 0.05);
+}
+
+.fgArc {
+  stroke: url(#gaugeGradient);
+  /* Fallback if gradient fails */
+  stroke: $primary;
+  filter: drop-shadow(0 0 6px rgba($primary, 0.4));
+}
+
+.centerScore {
+  position: absolute;
+  bottom: 0;
+  left: 50%;
+  transform: translateX(-50%);
+  display: flex;
+  align-items: baseline;
+  gap: 2px;
+  font-family: $font-family-heading;
+
+  .largeScore {
+    font-size: $text-2xl;
+    font-weight: 700;
+    color: $light;
+  }
+
+  .outOf {
+    font-size: $text-sm;
+    color: $text-muted;
+  }
+}
+
+// Global definition for the gradient used in the SVG stroke
+:global {
+  svg {
+    defs {
+      linearGradient#gaugeGradient {
+        stop:first-child {
+          stop-color: #00e5ff;
+        }
+        stop:last-child {
+          stop-color: #00ff88;
+        }
+      }
+    }
+  }
+}

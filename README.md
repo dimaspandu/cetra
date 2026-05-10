@@ -19,9 +19,9 @@ Not everything discarded has lost its value. CETRA is an AI-powered sustainabili
 
 3. **Configure environment variables**
 
-    Copy `.env.example` to `.env` and fill in your API keys:
-    - Firebase project configuration
-    - Gemini API key from Google AI Studio
+     Copy `.env.example` to `.env` and fill in your API keys:
+     - Firebase project configuration (client-side)
+     - Gemini API key from Google AI Studio (server-side)
 
 4. **Set up Firebase**
     - Create a Firebase project
@@ -46,8 +46,8 @@ Not everything discarded has lost its value. CETRA is an AI-powered sustainabili
 
     **Option A: Using Docker environment variables**
     ```bash
-    docker run -e VITE_GEMINI_API_KEY=your_key_here \
-                -e VITE_GEMINI_MODEL_NAME=gemini-2.5-flash-lite \
+    docker run -e GEMINI_API_KEY=your_key_here \
+                -e GEMINI_MODEL_NAME=gemini-2.5-flash-lite \
                 -e VITE_FIREBASE_API_KEY=your_firebase_key \
                 your-image-name
     ```
@@ -61,22 +61,22 @@ Not everything discarded has lost its value. CETRA is an AI-powered sustainabili
         ports:
           - "8080:8080"
         environment:
-          - VITE_GEMINI_API_KEY=your_gemini_api_key
-          - VITE_GEMINI_MODEL_NAME=gemini-2.5-flash-lite
+          - GEMINI_API_KEY=your_gemini_api_key
+          - GEMINI_MODEL_NAME=gemini-2.5-flash-lite
           - VITE_FIREBASE_API_KEY=your_firebase_api_key
           # ... other Firebase variables
     ```
 
     **Option C: Using deployment platform environment variables**
     Set the following environment variables in your deployment platform (Vercel, Netlify, Railway, etc.):
-    - `VITE_GEMINI_API_KEY`
-    - `VITE_GEMINI_MODEL_NAME`
-    - `VITE_FIREBASE_API_KEY`
-    - `VITE_FIREBASE_AUTH_DOMAIN`
-    - `VITE_FIREBASE_PROJECT_ID`
-    - `VITE_FIREBASE_STORAGE_BUCKET`
-    - `VITE_FIREBASE_MESSAGING_SENDER_ID`
-    - `VITE_FIREBASE_APP_ID`
+    - `GEMINI_API_KEY` (server-side only)
+    - `GEMINI_MODEL_NAME` (server-side only)
+    - `VITE_FIREBASE_API_KEY` (client-side)
+    - `VITE_FIREBASE_AUTH_DOMAIN` (client-side)
+    - `VITE_FIREBASE_PROJECT_ID` (client-side)
+    - `VITE_FIREBASE_STORAGE_BUCKET` (client-side)
+    - `VITE_FIREBASE_MESSAGING_SENDER_ID` (client-side)
+    - `VITE_FIREBASE_APP_ID` (client-side)
 
 ## Tech Stack
 

@@ -1,0 +1,16 @@
+steps:
+  - name: "gcr.io/cloud-builders/docker"
+    args:
+      [
+        "build",
+        "-t",
+        "gcr.io/$PROJECT_ID/cetra",
+        "--build-arg",
+        "VITE_GEMINI_API_KEY=$_VITE_GEMINI_API_KEY",
+        "--build-arg",
+        "VITE_GEMINI_MODEL_NAME=$_VITE_GEMINI_MODEL_NAME",
+        "."
+      ]
+
+images:
+  - "gcr.io/$PROJECT_ID/cetra"

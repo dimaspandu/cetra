@@ -1,9 +1,7 @@
 import { createSignal, Show, For } from "solid-js";
+import { createStore, produce } from "solid-js/store";
 import { Motion } from "solid-motionone";
-import {
-  analyzeImage,
-  type AnalysisResult,
-} from "../../ai/gemini";
+import { type AnalysisResult } from "../../ai/gemini";
 import SuggestionCard from "../SuggestionCard/SuggestionCard";
 import SustainabilityGauge from "../SustainabilityGauge/SustainabilityGauge";
 import styles from "./UploadArea.module.scss";
@@ -13,7 +11,15 @@ export default function UploadArea() {
   const [uploadedImage, setUploadedImage] = createSignal<string | null>(null);
   const [isAnalyzing, setIsAnalyzing] = createSignal(false);
   
-  const [result, setResult] = createSignal<AnalysisResult | null>(null);
+  // Use createStore for deeply nested reactivity
+  const [result, setResult] = createStore<AnalysisResult>({
+    materialType: "",
+    condition: "",
+    usability: "",
+    recyclability: "",
+    suggestions: []
+  });
+  const [hasResult, setHasResult] = createSignal(false);
   const [error, setError] = createSignal<string | null>(null);
 
   let fileInput: HTMLInputElement | undefined;
@@ -45,14 +51,34 @@ export default function UploadArea() {
         setUploadedImage(base64Image);
         setIsAnalyzing(true);
         setError(null);
-        setResult(null);
+        setResult({
+          materialType: "",
+          condition: "",
+          usability: "",
+          recyclability: "",
+          suggestions: []
+        });
+        setHasResult(false);
 
         try {
-          const analysis = await analyzeImage(base64Image);
-          setResult(analysis);
+          const response = await fetch("/api/analyze", {
+            method: "POST",
+            headers: {
+              "Content-Type": "application/json",
+            },
+            body: JSON.stringify({ imageBase64: base64Image }),
+          });
 
-          // TODO: Re-implement progressive image generation with signals
-          // generateImagesForSuggestions(analysis);
+          if (!response.ok) {
+            throw new Error("Analysis failed");
+          }
+
+          const analysis = await response.json();
+          setResult(analysis);
+          setHasResult(true);
+
+          // Trigger progressive image generation
+          generateImagesForSuggestions(analysis);
         } catch (err) {
           setError("Failed to analyze the image. Please try again.");
           console.error(err);
@@ -64,13 +90,52 @@ export default function UploadArea() {
     }
   };
 
-  // TODO: Re-implement with signals instead of store
-  // const generateImagesForSuggestions = (analysis: AnalysisResult) => {
-  //   analysis.suggestions.forEach(async (suggestion, index) => {
-  //     if (!suggestion.imagePrompt) return;
-  //     // Implementation needed
-  //   });
-  // };
+  const generateImagesForSuggestions = (analysis: AnalysisResult) => {
+    analysis.suggestions.forEach(async (suggestion, index) => {
+      if (!suggestion.imagePrompt) return;
+
+      // Mark as loading
+      setResult(
+        produce((state) => {
+          if (state && state.suggestions && state.suggestions[index]) {
+            state.suggestions[index].imageStatus = "loading";
+          }
+        })
+      );
+
+      try {
+        const response = await fetch("/api/generate-image", {
+          method: "POST",
+          headers: {
+            "Content-Type": "application/json",
+          },
+          body: JSON.stringify({ prompt: suggestion.imagePrompt }),
+        });
+
+        if (!response.ok) {
+          throw new Error("Image generation failed");
+        }
+
+        const data = await response.json();
+        setResult(
+          produce((state) => {
+            if (state && state.suggestions && state.suggestions[index]) {
+              state.suggestions[index].imageUrl = data.imageUrl;
+              state.suggestions[index].imageStatus = "done";
+            }
+          })
+        );
+      } catch (err) {
+        setResult(
+          produce((state) => {
+            if (state && state.suggestions && state.suggestions[index]) {
+              state.suggestions[index].imageStatus = "error";
+            }
+          })
+        );
+      }
+    });
+  };
 
   const handleClick = () => {
     fileInput?.click();
@@ -78,13 +143,20 @@ export default function UploadArea() {
 
   const reset = () => {
     setUploadedImage(null);
-    setResult(null);
+    setResult({
+      materialType: "",
+      condition: "",
+      usability: "",
+      recyclability: "",
+      suggestions: []
+    });
+    setHasResult(false);
   };
 
   // Extract score logic from UI
   const getSustainabilityScore = () => {
-    if (!result()) return 0;
-    const { recyclability, condition } = result()!;
+    if (!hasResult()) return 0;
+    const { recyclability, condition } = result;
     let score = 50;
     if (recyclability === "high") score += 30;
     if (recyclability === "medium") score += 15;
@@ -177,7 +249,7 @@ export default function UploadArea() {
                   <p class={styles.logActive}><span>[00:03]</span> Analyzing Material Composition...</p>
                   <p class={styles.logActive}><span>[00:04]</span> Assessing Recyclability...</p>
                 </Show>
-                <Show when={result()}>
+                <Show when={hasResult()}>
                   <p><span>[00:05]</span> Analysis Complete.</p>
                   <p><span>[00:05]</span> Generating Suggestions...</p>
                 </Show>
@@ -206,7 +278,7 @@ export default function UploadArea() {
           </Show>
 
           <Show
-            when={result()}
+            when={hasResult()}
             fallback={
               <div class={styles.emptyState}>
                 <div class={styles.pulseOrb}></div>
@@ -224,21 +296,21 @@ export default function UploadArea() {
                 <div class={styles.badges}>
                   <div class={styles.badge}>
                     <span class={styles.badgeIcon}>♻️</span>
-                    <span>{result()?.materialType}</span>
+                    <span>{result.materialType}</span>
                   </div>
                   <div class={styles.badge}>
                     <span class={styles.badgeIcon}>✔️</span>
-                    <span>Condition: {result()?.condition}</span>
+                    <span>Condition: {result.condition}</span>
                   </div>
                   <div class={styles.badge}>
                     <span class={styles.badgeIcon}>📦</span>
-                    <span>Usability: {result()?.usability}</span>
+                    <span>Usability: {result.usability}</span>
                   </div>
                 </div>
               </div>
 
               <div class={styles.suggestionsGrid}>
-                <For each={result()?.suggestions}>
+                <For each={result.suggestions}>
                   {(suggestion) => (
                     <SuggestionCard suggestion={suggestion} />
                   )}

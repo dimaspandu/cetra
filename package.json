@@ -1,0 +1,46 @@
+{
+  "name": "cetra",
+  "version": "0.1.0",
+  "description": "AI that sees value before you throw it away.",
+  "type": "module",
+  "scripts": {
+    "dev": "solid-start dev",
+    "build": "solid-start build",
+    "start": "solid-start start",
+    "lint": "eslint src --ext .ts,.tsx --config .eslintrc.cjs",
+    "typecheck": "tsc --noEmit"
+  },
+  "dependencies": {
+    "@google/generative-ai": "^0.24.1",
+    "@graphql-tools/schema": "^10.0.33",
+    "@solidjs/router": "^0.8.0",
+    "firebase": "^10.7.0",
+    "graphql": "^16.8.0",
+    "graphql-tag": "^2.12.6",
+    "graphql-yoga": "^5.0.0",
+    "solid-js": "^1.8.0",
+    "solid-motionone": "^1.0.0",
+    "solid-start": "^0.3.0",
+    "solid-start-node": "^0.3.0",
+    "vinxi": "^0.4.0"
+  },
+  "devDependencies": {
+    "@types/node": "^20.0.0",
+    "@typescript-eslint/eslint-plugin": "^6.0.0",
+    "@typescript-eslint/parser": "^6.0.0",
+    "autoprefixer": "^10.4.0",
+    "cross-env": "^10.1.0",
+    "eslint": "^8.0.0",
+    "eslint-config-prettier": "^10.1.8",
+    "eslint-plugin-prettier": "^5.5.5",
+    "postcss": "^8.4.0",
+    "prettier": "^3.8.3",
+    "sass": "^1.69.0",
+    "typescript": "^5.0.0",
+    "vite": "^5.0.0",
+    "vite-plugin-solid": "^2.8.0"
+  },
+  "engines": {
+    "node": ">=18"
+  }
+}

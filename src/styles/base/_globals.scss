@@ -1,0 +1,92 @@
+@import "../abstracts/variables";
+@import "../abstracts/mixins";
+@import "../abstracts/animations";
+
+*,
+*::before,
+*::after {
+  box-sizing: border-box;
+}
+
+html {
+  font-family: $font-family-primary;
+  line-height: 1.5;
+  -webkit-text-size-adjust: 100%;
+  -moz-tab-size: 4;
+  tab-size: 4;
+  font-feature-settings: normal;
+  font-variation-settings: normal;
+}
+
+body {
+  margin: 0;
+  background: $gradient-dark;
+  color: $light;
+  min-height: 100vh;
+  overflow-x: hidden;
+}
+
+h1,
+h2,
+h3,
+h4,
+h5,
+h6 {
+  font-family: $font-family-heading;
+  font-weight: 700;
+  line-height: 1.2;
+  margin: 0 0 $space-md 0;
+}
+
+p {
+  margin: 0 0 $space-md 0;
+}
+
+a {
+  color: $primary;
+  text-decoration: none;
+  transition: $transition-fast;
+
+  &:hover {
+    color: $secondary;
+  }
+}
+
+button {
+  font-family: inherit;
+  cursor: pointer;
+}
+
+img,
+video,
+canvas,
+svg {
+  display: block;
+  max-width: 100%;
+  height: auto;
+}
+
+// Custom scrollbar
+::-webkit-scrollbar {
+  width: 8px;
+}
+
+::-webkit-scrollbar-track {
+  background: rgba(255, 255, 255, 0.1);
+  border-radius: $radius-md;
+}
+
+::-webkit-scrollbar-thumb {
+  background: $primary;
+  border-radius: $radius-md;
+
+  &:hover {
+    background: $secondary;
+  }
+}
+
+// Focus styles
+:focus-visible {
+  outline: 2px solid $primary;
+  outline-offset: 2px;
+}

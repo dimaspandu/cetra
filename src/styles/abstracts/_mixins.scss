@@ -1,0 +1,96 @@
+// Glassmorphism
+@mixin glassmorphism($blur: 10px, $opacity: 0.1) {
+  background: rgba(255, 255, 255, $opacity);
+  backdrop-filter: blur($blur);
+  -webkit-backdrop-filter: blur($blur);
+  border: 1px solid rgba(255, 255, 255, 0.2);
+}
+
+// Floating animation
+@mixin float {
+  animation: float 3s ease-in-out infinite;
+}
+
+@keyframes float {
+  0%,
+  100% {
+    transform: translateY(0);
+  }
+  50% {
+    transform: translateY(-10px);
+  }
+}
+
+// Glow pulse
+@mixin glow-pulse {
+  animation: glow-pulse 2s ease-in-out infinite alternate;
+}
+
+@keyframes glow-pulse {
+  from {
+    box-shadow: $glow-primary;
+  }
+  to {
+    box-shadow: $glow-accent;
+  }
+}
+
+// Fade in
+@mixin fade-in($delay: 0s) {
+  animation: fade-in 0.5s ease-out $delay forwards;
+  opacity: 0;
+}
+
+@keyframes fade-in {
+  to {
+    opacity: 1;
+  }
+}
+
+// Slide up
+@mixin slide-up($delay: 0s) {
+  animation: slide-up 0.5s ease-out $delay forwards;
+  transform: translateY(20px);
+  opacity: 0;
+}
+
+@keyframes slide-up {
+  to {
+    transform: translateY(0);
+    opacity: 1;
+  }
+}
+
+// Responsive breakpoints
+@mixin respond-to($breakpoint) {
+  @if $breakpoint == "mobile" {
+    @media (max-width: 768px) {
+      @content;
+    }
+  } @else if $breakpoint == "tablet" {
+    @media (min-width: 769px) and (max-width: 1024px) {
+      @content;
+    }
+  } @else if $breakpoint == "desktop" {
+    @media (min-width: 1025px) {
+      @content;
+    }
+  }
+}
+
+// Button styles
+@mixin button-primary {
+  background: $gradient-primary;
+  color: white;
+  border: none;
+  border-radius: $radius-md;
+  padding: $space-md $space-lg;
+  font-weight: 600;
+  transition: $transition-normal;
+  cursor: pointer;
+
+  &:hover {
+    transform: translateY(-2px);
+    box-shadow: $shadow-medium, $glow-primary;
+  }
+}

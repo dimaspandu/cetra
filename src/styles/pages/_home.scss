@@ -1,0 +1,30 @@
+.home {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  min-height: 100vh;
+  padding: $space-2xl;
+  gap: $space-2xl;
+
+  .hero {
+    text-align: center;
+
+    h1 {
+      background: $gradient-primary;
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+      background-clip: text;
+      margin-bottom: $space-lg;
+      @include slide-up();
+    }
+
+    p {
+      font-size: $text-lg;
+      color: rgba(255, 255, 255, 0.8);
+      max-width: 600px;
+      margin: 0 auto;
+      @include slide-up(0.2s);
+    }
+  }
+}

@@ -1,0 +1,187 @@
+import { GoogleGenerativeAI } from "@google/generative-ai";
+
+const genAI = new GoogleGenerativeAI(import.meta.env.VITE_GEMINI_API_KEY);
+
+export interface AnalysisResult {
+  materialType: string;
+  condition: string;
+  usability: string;
+  recyclability: string;
+  suggestions: Suggestion[];
+}
+
+export interface Suggestion {
+  type: "reuse" | "recipe" | "diy" | "resale" | "donation" | "recycling";
+  title: string;
+  description: string;
+  difficulty?: string;
+  timeEstimate?: string;
+  tools?: string[];
+  value?: string;
+  impact?: string;
+}
+
+const MODEL_NAME = import.meta.env.VITE_GEMINI_MODEL_NAME;
+
+function cleanJsonResponse(text: string) {
+  return text.replace(/```json\n?|\n?```/g, "").trim();
+}
+
+export async function analyzeImage(
+  imageBase64: string,
+): Promise<AnalysisResult> {
+  try {
+    const model = genAI.getGenerativeModel({
+      model: MODEL_NAME,
+    });
+
+    const prompt = `
+      Analyze this image of an item someone is considering discarding.
+
+      Return ONLY a valid JSON object with this exact structure:
+
+      {
+        "materialType": "type of material",
+        "condition": "excellent|good|fair|poor",
+        "usability": "reusable|consumable|repairable|recyclable",
+        "recyclability": "high|medium|low|none",
+        "suggestions": [
+          {
+            "type": "reuse|recipe|diy|resale|donation|recycling",
+            "title": "brief title",
+            "description": "detailed description",
+            "difficulty": "easy|medium|hard",
+            "timeEstimate": "time estimate",
+            "tools": ["tool1", "tool2"],
+            "value": "estimated value",
+            "impact": "environmental impact"
+          }
+        ]
+      }
+
+      Requirements:
+      - Give 3-5 realistic suggestions
+      - Be practical and creative
+      - Focus on sustainability
+      - Return ONLY JSON
+    `;
+
+    const result = await model.generateContent({
+      contents: [
+        {
+          role: "user",
+          parts: [
+            {
+              text: prompt,
+            },
+            {
+              inlineData: {
+                mimeType: "image/jpeg",
+                data: imageBase64.split(",")[1],
+              },
+            },
+          ],
+        },
+      ],
+      generationConfig: {
+        responseMimeType: "application/json",
+        temperature: 0.7,
+      },
+    });
+
+    const response = await result.response;
+    const text = cleanJsonResponse(response.text());
+
+    return JSON.parse(text);
+  } catch (error) {
+    console.error("Gemini analyzeImage error:", error);
+
+    return {
+      materialType: "unknown",
+      condition: "good",
+      usability: "reusable",
+      recyclability: "medium",
+      suggestions: [
+        {
+          type: "diy",
+          title: "Creative Upcycling Project",
+          description:
+            "Transform this item into something useful instead of throwing it away.",
+          difficulty: "easy",
+          timeEstimate: "20 minutes",
+          tools: ["scissors", "glue"],
+          value: "$5-10",
+          impact: "Reduces waste and extends the life cycle of the material.",
+        },
+        {
+          type: "donation",
+          title: "Donate to Community",
+          description:
+            "Consider donating the item to someone who may still find value in it.",
+          difficulty: "easy",
+          timeEstimate: "10 minutes",
+          impact: "Promotes reuse and reduces landfill waste.",
+        },
+      ],
+    };
+  }
+}
+
+export async function generateTutorial(
+  suggestion: Suggestion,
+): Promise<string[]> {
+  try {
+    const model = genAI.getGenerativeModel({
+      model: MODEL_NAME,
+    });
+
+    const prompt = `
+      Generate a step-by-step tutorial for this idea:
+
+      Title:
+      ${suggestion.title}
+
+      Description:
+      ${suggestion.description}
+
+      Return ONLY a JSON array of strings.
+
+      Requirements:
+      - 5 to 8 steps
+      - Clear and beginner friendly
+      - Practical instructions
+    `;
+
+    const result = await model.generateContent({
+      contents: [
+        {
+          role: "user",
+          parts: [
+            {
+              text: prompt,
+            },
+          ],
+        },
+      ],
+      generationConfig: {
+        responseMimeType: "application/json",
+        temperature: 0.6,
+      },
+    });
+
+    const response = await result.response;
+    const text = cleanJsonResponse(response.text());
+
+    return JSON.parse(text);
+  } catch (error) {
+    console.error("Gemini generateTutorial error:", error);
+
+    return [
+      "Gather all necessary materials and tools.",
+      "Clean and prepare the item carefully.",
+      "Follow the transformation process step by step.",
+      "Check stability and usability of the final result.",
+      "Use and enjoy your sustainable creation.",
+    ];
+  }
+}

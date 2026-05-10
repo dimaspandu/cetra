@@ -13,7 +13,7 @@ COPY . .
 RUN pnpm build
 
 # Runtime environment variables for server-side operations
-ENV PORT=8080
+# PORT will be set by Cloud Run
 ENV GEMINI_API_KEY=""
 ENV GEMINI_MODEL_NAME="gemini-2.5-flash-lite"
 

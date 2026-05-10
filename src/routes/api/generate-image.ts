@@ -13,6 +13,15 @@ export async function POST({ request }: { request: Request }) {
     return json({ imageUrl });
   } catch (error) {
     console.error("API generate-image error:", error);
+
+    // Handle API key configuration error
+    if (error instanceof Error && error.message.includes("GEMINI_API_KEY")) {
+      return json(
+        { error: "AI service is not configured. Please contact the administrator." },
+        { status: 503 }
+      );
+    }
+
     return json(
       { error: "Failed to generate image" },
       { status: 500 }

@@ -4,11 +4,17 @@ import { GoogleGenerativeAI } from "@google/generative-ai";
 const API_KEY = process.env.GEMINI_API_KEY;
 const MODEL_NAME = process.env.GEMINI_MODEL_NAME || "gemini-2.5-flash-lite";
 
-if (!API_KEY) {
-  throw new Error("GEMINI_API_KEY environment variable is required");
-}
+let genAI: GoogleGenerativeAI | null = null;
 
-const genAI = new GoogleGenerativeAI(API_KEY);
+function getGenAI() {
+  if (!API_KEY) {
+    throw new Error("GEMINI_API_KEY environment variable is required. Please set it in your deployment environment.");
+  }
+  if (!genAI) {
+    genAI = new GoogleGenerativeAI(API_KEY);
+  }
+  return genAI;
+}
 
 export interface AnalysisResult {
   materialType: string;
@@ -41,7 +47,7 @@ export async function analyzeImage(
   imageBase64: string,
 ): Promise<AnalysisResult> {
   try {
-    const model = genAI.getGenerativeModel({
+    const model = getGenAI().getGenerativeModel({
       model: MODEL_NAME,
     });
 
@@ -178,7 +184,7 @@ export async function generateTutorial(
   suggestion: Suggestion,
 ): Promise<string[]> {
   try {
-    const model = genAI.getGenerativeModel({
+    const model = getGenAI().getGenerativeModel({
       model: MODEL_NAME,
     });
 

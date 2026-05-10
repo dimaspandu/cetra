@@ -1,16 +1,29 @@
 steps:
+  # Build the Docker image
   - name: "gcr.io/cloud-builders/docker"
     args:
       [
         "build",
         "-t",
         "gcr.io/$PROJECT_ID/cetra",
-        "--build-arg",
-        "VITE_GEMINI_API_KEY=$_VITE_GEMINI_API_KEY",
-        "--build-arg",
-        "VITE_GEMINI_MODEL_NAME=$_VITE_GEMINI_MODEL_NAME",
         "."
       ]
+
+  # Deploy to Cloud Run
+  - name: "gcr.io/google.com/cloudsdktool/cloud-sdk"
+    entrypoint: gcloud
+    args:
+      - run
+      - deploy
+      - cetra
+      - --image=gcr.io/$PROJECT_ID/cetra
+      - --platform=managed
+      - --region=asia-southeast1
+      - --allow-unauthenticated
+      - --set-env-vars=GEMINI_API_KEY=${_GEMINI_API_KEY},GEMINI_MODEL_NAME=gemini-2.5-flash-lite
+
+substitutions:
+  _GEMINI_API_KEY: ""  # Set this in Cloud Build trigger
 
 images:
   - "gcr.io/$PROJECT_ID/cetra"

@@ -1,26 +1,19 @@
-# Use the official Node.js image
 FROM node:20-alpine
 
-# Set working directory
 WORKDIR /app
 
-# Copy package files
-COPY package*.json ./
+COPY package.json pnpm-lock.yaml ./
 
-# Install dependencies
-RUN npm install
+RUN npm install -g pnpm
 
-# Copy project files
+RUN pnpm install --frozen-lockfile
+
 COPY . .
 
-# Build app
-RUN npm run build
+RUN pnpm build
 
-# Cloud Run uses PORT env
 ENV PORT=8080
 
-# Expose port
 EXPOSE 8080
 
-# Start app
-CMD ["npm", "start"]
+CMD ["pnpm", "start"]

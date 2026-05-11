@@ -109,7 +109,7 @@ export async function analyzeImage(
     const response = await result.response;
     const text = cleanJsonResponse(response.text());
     const parsed = JSON.parse(text) as AnalysisResult;
-    
+
     // Assign IDs and initial image status to suggestions
     parsed.suggestions = parsed.suggestions.map((s) => ({
       ...s,
@@ -124,9 +124,9 @@ export async function analyzeImage(
     // Provide more specific error messages for common issues
     if (error instanceof Error) {
       if (error.message.includes("API key")) {
-        console.error("🔑 API Key Error: Gemini API key is missing or invalid");
+        console.error("API Key Error: Gemini API key is missing or invalid");
       } else if (error.message.includes("model name")) {
-        console.error("🤖 Model Error: Gemini model name is not configured");
+        console.error("Model Error: Gemini model name is not configured");
       }
     }
 

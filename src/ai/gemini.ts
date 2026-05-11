@@ -168,52 +168,71 @@ export async function analyzeImage(
 }
 
 export async function generateSuggestionImage(prompt: string): Promise<string> {
-  if (!API_KEY) {
-    throw new Error("GEMINI_API_KEY environment variable is required.");
-  }
-
   try {
-    const url = `https://generativelanguage.googleapis.com/v1beta/models/imagen-3.0-generate-001:predict?key=${API_KEY}`;
+    const cleanPrompt = prompt
+      .replace(/[^\w\s,-]/g, "")
+      .trim();
 
-    const response = await fetch(url, {
-      method: "POST",
-      headers: {
-        "Content-Type": "application/json",
+    const enhancedPrompt = `
+      eco-friendly futuristic sustainability concept,
+      realistic photography,
+      premium lighting,
+      clean composition,
+      highly detailed,
+      soft green and teal tones,
+      ${cleanPrompt}
+    `;
+
+    const encodedPrompt = encodeURIComponent(
+      enhancedPrompt,
+    );
+
+    const pollinationsUrl =
+      `https://image.pollinations.ai/prompt/${encodedPrompt}` +
+      `?width=400&height=300&seed=${Date.now()}&nologo=true`;
+
+    // Timeout controller
+    const controller = new AbortController();
+
+    const timeout = setTimeout(() => {
+      controller.abort();
+    }, 15000);
+
+    const response = await fetch(
+      pollinationsUrl,
+      {
+        signal: controller.signal,
       },
-      body: JSON.stringify({
-        instances: [
-          {
-            prompt: prompt,
-          },
-        ],
-        parameters: {
-          sampleCount: 1,
-          aspectRatio: "1:1",
-        },
-      }),
-    });
+    );
+
+    clearTimeout(timeout);
 
     if (!response.ok) {
-      const errorText = await response.text();
-      console.error("Imagen API error response:", errorText);
-      throw new Error(`Imagen API error: ${response.status} ${response.statusText}`);
+      throw new Error(
+        `Image fetch failed: ${response.status}`,
+      );
     }
 
-    const data = await response.json();
+    // Convert image → base64
+    const arrayBuffer =
+      await response.arrayBuffer();
 
-    if (data.predictions && data.predictions.length > 0) {
-      const base64 = data.predictions[0].bytesBase64;
-      const mimeType = data.predictions[0].mimeType || "image/jpeg";
-      return `data:${mimeType};base64,${base64}`;
-    } else {
-      throw new Error("No image generated in the response.");
-    }
+    const base64 = Buffer.from(
+      arrayBuffer,
+    ).toString("base64");
+
+    return `data:image/jpeg;base64,${base64}`;
   } catch (error) {
-    console.error("Gemini generateSuggestionImage error:", error);
+    console.error(
+      "generateSuggestionImage error:",
+      error,
+    );
 
-    // Fallback to a free AI image generator based on the prompt if Gemini fails
-    const encodedPrompt = encodeURIComponent(prompt.trim());
-    return `https://image.pollinations.ai/prompt/${encodedPrompt}?width=400&height=300&seed=${Date.now()}&nologo=true`;
+    // FINAL FALLBACK
+    const fallbackSeed =
+      encodeURIComponent(prompt);
+
+    return `https://picsum.photos/seed/${fallbackSeed}/400/300`;
   }
 }
 

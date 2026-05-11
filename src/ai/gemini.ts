@@ -168,16 +168,53 @@ export async function analyzeImage(
 }
 
 export async function generateSuggestionImage(prompt: string): Promise<string> {
-  // Mock function simulating an API call that takes time
-  return new Promise((resolve) => {
-    setTimeout(() => {
-      // In a real app, this would call Gemini's Imagen or another image generation API
-      // For now, we return a high-quality placeholder based on keywords or just a random nice image
-      // We use unsplash source with some nature/tech keywords for demonstration
-      const randomId = Math.floor(Math.random() * 1000);
-      resolve(`https://picsum.photos/seed/${randomId}/400/300`);
-    }, 2500); // Simulate 2.5s generation time
-  });
+  if (!API_KEY) {
+    throw new Error("GEMINI_API_KEY environment variable is required.");
+  }
+
+  try {
+    const url = `https://generativelanguage.googleapis.com/v1beta/models/imagen-3.0-generate-001:predict?key=${API_KEY}`;
+
+    const response = await fetch(url, {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+      },
+      body: JSON.stringify({
+        instances: [
+          {
+            prompt: prompt,
+          },
+        ],
+        parameters: {
+          sampleCount: 1,
+          aspectRatio: "1:1",
+        },
+      }),
+    });
+
+    if (!response.ok) {
+      const errorText = await response.text();
+      console.error("Imagen API error response:", errorText);
+      throw new Error(`Imagen API error: ${response.status} ${response.statusText}`);
+    }
+
+    const data = await response.json();
+
+    if (data.predictions && data.predictions.length > 0) {
+      const base64 = data.predictions[0].bytesBase64;
+      const mimeType = data.predictions[0].mimeType || "image/jpeg";
+      return `data:${mimeType};base64,${base64}`;
+    } else {
+      throw new Error("No image generated in the response.");
+    }
+  } catch (error) {
+    console.error("Gemini generateSuggestionImage error:", error);
+
+    // Fallback to a free AI image generator based on the prompt if Gemini fails
+    const encodedPrompt = encodeURIComponent(prompt.trim());
+    return `https://image.pollinations.ai/prompt/${encodedPrompt}?width=400&height=300&seed=${Date.now()}&nologo=true`;
+  }
 }
 
 export async function generateTutorial(

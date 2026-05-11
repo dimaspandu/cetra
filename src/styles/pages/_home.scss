@@ -42,7 +42,7 @@
     .logo-wrapper {
       display: inline-block;
       position: relative;
-      
+
       &::after {
         content: "";
         position: absolute;
@@ -72,7 +72,7 @@
       color: $text-muted;
       letter-spacing: 1px;
       max-width: 600px;
-      margin: 0 auto;
+      margin: 2rem auto 0;
       @include fade-in(0.2s);
     }
   }
@@ -82,6 +82,7 @@
   0% {
     background-position: 0 0;
   }
+
   100% {
     background-position: -1000px 1000px;
   }

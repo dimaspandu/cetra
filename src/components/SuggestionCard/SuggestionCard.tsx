@@ -1,4 +1,4 @@
-import { Show, createSignal, onMount } from "solid-js";
+import { Show, createSignal, For } from "solid-js";
 import { Motion } from "solid-motionone";
 import type { Suggestion } from "../../ai/gemini";
 import styles from "./SuggestionCard.module.scss";
@@ -9,6 +9,39 @@ interface SuggestionCardProps {
 }
 
 export default function SuggestionCard(props: SuggestionCardProps) {
+  const [isLearningMore, setIsLearningMore] = createSignal(false);
+  const [tutorialSteps, setTutorialSteps] = createSignal<string[]>([]);
+  const [error, setError] = createSignal<string | null>(null);
+
+  const handleLearnMore = async () => {
+    if (tutorialSteps().length > 0) {
+      setTutorialSteps([]);
+      return;
+    }
+
+    setIsLearningMore(true);
+    setError(null);
+    try {
+      const res = await fetch("/api/tutorial", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ suggestion: props.suggestion }),
+      });
+      if (!res.ok) {
+        throw new Error("Failed to load tutorial");
+      }
+      const data = await res.json();
+      if (data.tutorial) {
+        setTutorialSteps(data.tutorial);
+      }
+    } catch (e) {
+      console.error(e);
+      setError("Failed to generate tutorial.");
+    } finally {
+      setIsLearningMore(false);
+    }
+  };
+
   return (
     <div class={styles.card}>
       <div class={styles.header}>
@@ -53,8 +86,30 @@ export default function SuggestionCard(props: SuggestionCardProps) {
       </div>
 
       <div class={styles.actions}>
-        <button class={styles.actionButton}>Learn More</button>
+        <button 
+          class={styles.actionButton} 
+          onClick={handleLearnMore} 
+          disabled={isLearningMore()}
+        >
+          {isLearningMore() ? "Loading..." : tutorialSteps().length > 0 ? "Show Less" : "Learn More"}
+        </button>
       </div>
+
+      <Show when={tutorialSteps().length > 0 || error()}>
+        <div class={styles.tutorial}>
+          <Show when={error()}>
+            <p class={styles.error}>{error()}</p>
+          </Show>
+          <Show when={tutorialSteps().length > 0}>
+            <h6 class={styles.tutorialTitle}>Step-by-Step Guide</h6>
+            <ol class={styles.tutorialSteps}>
+              <For each={tutorialSteps()}>
+                {(step) => <li>{step}</li>}
+              </For>
+            </ol>
+          </Show>
+        </div>
+      </Show>
     </div>
   );
 }

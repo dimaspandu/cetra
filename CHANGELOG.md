@@ -2,6 +2,17 @@
 
 All notable changes to this project will be documented in this file.
 
+## [1.2.2] - 2026-05-12
+### Added
+- Activated the learn more button to fetch suggestion's tutorial
+
+### Fixed
+- Handled broken images on suggestions section
+- Fixed styling and api key
+
+### Chore
+- Checkpoint
+
 ## [1.2.1] - 2026-05-10
 ### Fixed
 - Resolved Cloud Run deployment issues by removing build-time environment variables

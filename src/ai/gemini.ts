@@ -39,6 +39,17 @@ export interface Suggestion {
   imageStatus?: "idle" | "loading" | "done" | "error";
 }
 
+export interface TutorialReference {
+  title: string;
+  url: string;
+  sourceType: "article" | "scientific" | "video" | "guide";
+}
+
+export interface TutorialResult {
+  steps: string[];
+  references: TutorialReference[];
+}
+
 function cleanJsonResponse(text: string) {
   return text.replace(/```json\n?|\n?```/g, "").trim();
 }
@@ -238,7 +249,7 @@ export async function generateSuggestionImage(prompt: string): Promise<string> {
 
 export async function generateTutorial(
   suggestion: Suggestion,
-): Promise<string[]> {
+): Promise<TutorialResult> {
   try {
     const model = getGenAI().getGenerativeModel({
       model: MODEL_NAME,
@@ -253,12 +264,26 @@ export async function generateTutorial(
       Description:
       ${suggestion.description}
 
-      Return ONLY a JSON array of strings.
+      Return ONLY a valid JSON object with this exact structure:
+
+      {
+        "steps": ["step 1", "step 2"],
+        "references": [
+          {
+            "title": "reference title",
+            "url": "https://example.com/relevant-source",
+            "sourceType": "article|scientific|video|guide"
+          }
+        ]
+      }
 
       Requirements:
       - 5 to 8 steps
       - Clear and beginner friendly
       - Practical instructions
+      - Add 2 to 4 relevant references when possible
+      - Prefer credible educational, government, scientific, maker, or YouTube sources
+      - Use real, complete URLs only
     `;
 
     const result = await model.generateContent({
@@ -281,16 +306,55 @@ export async function generateTutorial(
     const response = await result.response;
     const text = cleanJsonResponse(response.text());
 
-    return JSON.parse(text);
+    const parsed = JSON.parse(text);
+
+    if (Array.isArray(parsed)) {
+      return {
+        steps: parsed,
+        references: [],
+      };
+    }
+
+    return {
+      steps: Array.isArray(parsed.steps) ? parsed.steps : [],
+      references: Array.isArray(parsed.references)
+        ? parsed.references
+            .filter((reference: Partial<TutorialReference>) => reference.title && reference.url)
+            .map((reference: Partial<TutorialReference>) => ({
+              title: String(reference.title),
+              url: String(reference.url),
+              sourceType:
+                reference.sourceType === "scientific" ||
+                reference.sourceType === "video" ||
+                reference.sourceType === "guide"
+                  ? reference.sourceType
+                  : "article",
+            }))
+        : [],
+    };
   } catch (error) {
     console.error("Gemini generateTutorial error:", error);
 
-    return [
-      "Gather all necessary materials and tools.",
-      "Clean and prepare the item carefully.",
-      "Follow the transformation process step by step.",
-      "Check stability and usability of the final result.",
-      "Use and enjoy your sustainable creation.",
-    ];
+    return {
+      steps: [
+        "Gather all necessary materials and tools.",
+        "Clean and prepare the item carefully.",
+        "Follow the transformation process step by step.",
+        "Check stability and usability of the final result.",
+        "Use and enjoy your sustainable creation.",
+      ],
+      references: [
+        {
+          title: "EPA: Reduce, Reuse, Recycle",
+          url: "https://www.epa.gov/recycle",
+          sourceType: "guide",
+        },
+        {
+          title: "Instructables: Reuse Projects",
+          url: "https://www.instructables.com/reuse/",
+          sourceType: "guide",
+        },
+      ],
+    };
   }
 }

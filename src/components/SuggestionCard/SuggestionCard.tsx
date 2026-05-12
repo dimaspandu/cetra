@@ -1,6 +1,7 @@
-import { Show, createSignal, For } from "solid-js";
+import { Show, createSignal } from "solid-js";
 import { Motion } from "solid-motionone";
-import type { Suggestion } from "../../ai/gemini";
+import type { Suggestion, TutorialResult } from "../../ai/gemini";
+import TutorialModal from "../TutorialModal/TutorialModal";
 import styles from "./SuggestionCard.module.scss";
 
 interface SuggestionCardProps {
@@ -10,12 +11,16 @@ interface SuggestionCardProps {
 
 export default function SuggestionCard(props: SuggestionCardProps) {
   const [isLearningMore, setIsLearningMore] = createSignal(false);
-  const [tutorialSteps, setTutorialSteps] = createSignal<string[]>([]);
+  const [isTutorialOpen, setIsTutorialOpen] = createSignal(false);
+  const [tutorial, setTutorial] = createSignal<TutorialResult>({
+    steps: [],
+    references: [],
+  });
   const [error, setError] = createSignal<string | null>(null);
 
   const handleLearnMore = async () => {
-    if (tutorialSteps().length > 0) {
-      setTutorialSteps([]);
+    if (tutorial().steps.length > 0 || error()) {
+      setIsTutorialOpen(true);
       return;
     }
 
@@ -32,11 +37,22 @@ export default function SuggestionCard(props: SuggestionCardProps) {
       }
       const data = await res.json();
       if (data.tutorial) {
-        setTutorialSteps(data.tutorial);
+        setTutorial(
+          Array.isArray(data.tutorial)
+            ? { steps: data.tutorial, references: [] }
+            : {
+                steps: Array.isArray(data.tutorial.steps) ? data.tutorial.steps : [],
+                references: Array.isArray(data.tutorial.references)
+                  ? data.tutorial.references
+                  : [],
+              },
+        );
+        setIsTutorialOpen(true);
       }
     } catch (e) {
       console.error(e);
       setError("Failed to generate tutorial.");
+      setIsTutorialOpen(true);
     } finally {
       setIsLearningMore(false);
     }
@@ -91,25 +107,18 @@ export default function SuggestionCard(props: SuggestionCardProps) {
           onClick={handleLearnMore} 
           disabled={isLearningMore()}
         >
-          {isLearningMore() ? "Loading..." : tutorialSteps().length > 0 ? "Show Less" : "Learn More"}
+          {isLearningMore() ? "Loading..." : "Learn More"}
         </button>
       </div>
 
-      <Show when={tutorialSteps().length > 0 || error()}>
-        <div class={styles.tutorial}>
-          <Show when={error()}>
-            <p class={styles.error}>{error()}</p>
-          </Show>
-          <Show when={tutorialSteps().length > 0}>
-            <h6 class={styles.tutorialTitle}>Step-by-Step Guide</h6>
-            <ol class={styles.tutorialSteps}>
-              <For each={tutorialSteps()}>
-                {(step) => <li>{step}</li>}
-              </For>
-            </ol>
-          </Show>
-        </div>
-      </Show>
+      <TutorialModal
+        isOpen={isTutorialOpen()}
+        suggestion={props.suggestion}
+        steps={tutorial().steps}
+        references={tutorial().references}
+        error={error()}
+        onClose={() => setIsTutorialOpen(false)}
+      />
     </div>
   );
 }

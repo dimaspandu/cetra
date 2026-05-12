@@ -1,5 +1,5 @@
 import { json } from "solid-start";
-import { generateTutorial, type Suggestion } from "../../ai/gemini";
+import { generateTutorial } from "../../ai/gemini";
 
 export async function POST({ request }: { request: Request }) {
   try {

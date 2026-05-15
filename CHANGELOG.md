@@ -2,6 +2,19 @@
 
 All notable changes to this project will be documented in this file.
 
+## [1.3.8] - 2026-05-15
+### Changed
+- **Premium Tutorial Modal**: Redesigned the Home page tutorial experience with glassmorphism, cinematic motion, and the iconic "rotating glow" close button from the archive.
+- **Interactive Guides**: Transformed static tutorial steps into interactive, hovered-responsive cards.
+- **Visual Sync**: Unified the design system between the Home page analysis and the Archive Discovery Lab.
+
+## [1.3.7] - 2026-05-15
+### Added
+- **Fuzzy Filtering**: Categories now use a "contains" match instead of an exact match, allowing items like "Kitchen, Food" to show up under the "Kitchen" chip.
+- **Enhanced Search Feedback**: Added a "Searching..." pulsing indicator in the search bar to show background activity during debounce.
+- **Expanded Category Chips**: Added Food, Packaging, and Garden chips to match common sustainability categories.
+- **Global Search**: The search bar now also filters by category names.
+
 ## [1.3.6] - 2026-05-15
 ### Added
 - **Fuzzy Filtering**: Categories now use a "contains" match instead of an exact match, allowing items like "Kitchen, Food" to show up under the "Kitchen" chip.

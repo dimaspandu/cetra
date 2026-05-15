@@ -2,6 +2,10 @@
 
 All notable changes to this project will be documented in this file.
 
+## [1.3.9] - 2026-05-15
+### Fixed
+- **Build Failure**: Added missing SASS variables ($space-3xl and $error) to the global design system to resolve production compilation errors.
+
 ## [1.3.8] - 2026-05-15
 ### Changed
 - **Premium Tutorial Modal**: Redesigned the Home page tutorial experience with glassmorphism, cinematic motion, and the iconic "rotating glow" close button from the archive.

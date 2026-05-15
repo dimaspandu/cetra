@@ -26,7 +26,7 @@ export const resolvers = {
     archive: async (_parent: any, { category, search }: any) => {
       let q = query(collection(db, "analyses"), orderBy("createdAt", "desc"));
       
-      if (category) {
+      if (category && category !== "") {
         q = query(q, where("category", "==", category));
       }
       

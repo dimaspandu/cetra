@@ -125,8 +125,16 @@
 
   p {
     color: $text-muted;
-    margin-bottom: $space-xl;
+    margin-bottom: $space-md;
     text-align: center;
+  }
+
+  .uploadHint {
+    font-size: $text-xs;
+    color: rgba($primary, 0.6);
+    text-transform: uppercase;
+    letter-spacing: 1px;
+    margin-bottom: $space-xl;
   }
 }
 

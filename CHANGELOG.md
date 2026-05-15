@@ -2,6 +2,21 @@
 
 All notable changes to this project will be documented in this file.
 
+## [1.3.1] - 2026-05-15
+### Added
+- **Client-Side Optimization**: Implemented image compression and resizing (max 1024px) before upload to reduce network latency.
+- **Image Validation**: Added 10MB file size limit with user-friendly error messages.
+- **Improved UX**: Added upload hints and better error/loading states to the Discovery Lab.
+
+### Changed
+- **Optimized Archiving**: Switched to 'Fire and Forget' for Firestore archiving in the REST API for faster AI response times.
+- **Production Readiness**: Updated SSR logic to support absolute URLs via `VITE_SITE_URL` environment variable.
+
+### Fixed
+- Fixed Sass compilation error caused by missing `$text-xs` variable.
+- Fixed TypeScript errors in Archive resource handling.
+- Fixed 'All' category filtering in the GraphQL resolver.
+
 ## [1.3.0] - 2026-05-15
 ### Added
 - **Discovery Lab**: A new searchable archive of AI-scanned items.

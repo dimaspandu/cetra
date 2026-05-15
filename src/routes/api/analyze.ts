@@ -14,17 +14,14 @@ export async function POST({ request }: { request: Request }) {
     // 1. Perform AI Analysis
     const result = await analyzeImage(imageBase64);
 
-    // 2. Archive the result in Firestore
-    try {
-      await addDoc(collection(db, "analyses"), {
-        ...result,
-        uploadId: "rest-" + Date.now(),
-        createdAt: serverTimestamp(),
-      });
-    } catch (dbError) {
-      console.error("Failed to archive analysis:", dbError);
-      // We don't block the response if archiving fails
-    }
+    // 2. Archive the result in Firestore (Fire and Forget)
+    addDoc(collection(db, "analyses"), {
+      ...result,
+      uploadId: "rest-" + Date.now(),
+      createdAt: serverTimestamp(),
+    }).catch(dbError => {
+      console.error("Failed to archive analysis in background:", dbError);
+    });
 
     return json(result);
   } catch (error) {

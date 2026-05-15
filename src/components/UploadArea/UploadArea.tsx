@@ -4,6 +4,7 @@ import { Motion } from "solid-motionone";
 import { type AnalysisResult } from "../../ai/gemini";
 import SuggestionCard from "../SuggestionCard/SuggestionCard";
 import SustainabilityGauge from "../SustainabilityGauge/SustainabilityGauge";
+import { optimizeImage } from "../../lib/image-utils";
 import styles from "./UploadArea.module.scss";
 
 export default function UploadArea() {
@@ -47,24 +48,34 @@ export default function UploadArea() {
 
   const handleFile = (file: File) => {
     if (file.type.startsWith("image/")) {
+      // Validation: Check file size (10MB)
+      if (file.size > 10 * 1024 * 1024) {
+        setError("File is too large. Please upload an image smaller than 10MB.");
+        return;
+      }
+
       const reader = new FileReader();
       reader.onload = async (e) => {
-        const base64Image = e.target?.result as string;
+        let base64Image = e.target?.result as string;
         setUploadedImage(base64Image);
         setIsAnalyzing(true);
         setError(null);
-        setResult({
-          materialType: "",
-          category: "",
-          itemImagePrompt: "",
-          condition: "",
-          usability: "",
-          recyclability: "",
-          suggestions: []
-        });
-        setHasResult(false);
 
         try {
+          // Client-side Compression: Resize and optimize for faster upload
+          base64Image = await optimizeImage(base64Image);
+          
+          setResult({
+            materialType: "",
+            category: "",
+            itemImagePrompt: "",
+            condition: "",
+            usability: "",
+            recyclability: "",
+            suggestions: []
+          });
+          setHasResult(false);
+
           const response = await fetch("/api/analyze", {
             method: "POST",
             headers: {
@@ -210,6 +221,7 @@ export default function UploadArea() {
                 </div>
                 <h3>Scan Your Item</h3>
                 <p>Drag & drop an image or click to upload</p>
+                <p class={styles.uploadHint}>Max 10MB &bull; Automatic Speed Optimization</p>
                 <button class={styles.uploadButton}>Choose File</button>
               </Motion.div>
             ) : (

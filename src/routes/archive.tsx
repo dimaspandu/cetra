@@ -41,8 +41,7 @@ const fetchArchive = async ({ category, search }: { category: string, search: st
 
   const { data, errors } = await response.json();
   if (errors) {
-    console.error("GraphQL errors:", errors);
-    return [];
+    throw new Error(errors[0].message);
   }
   return data.archive as ArchiveItem[];
 };
@@ -51,10 +50,14 @@ export default function Archive() {
   const [category, setCategory] = createSignal("");
   const [search, setSearch] = createSignal("");
   
-  const [archive] = createResource(
+  const [archive, { mutate, refetch }] = createResource(
     () => ({ category: category(), search: search() }),
     fetchArchive
   );
+
+  // Helper to check if we have any results
+  const hasResults = () => archive() && archive()!.length > 0;
+  const isInitialLoad = () => archive.loading && !archive();
 
   const categories = ["", "Kitchen", "Electronics", "Fashion", "Home", "Garden", "Other"];
 
@@ -103,13 +106,20 @@ export default function Archive() {
       </section>
 
       <Show 
-        when={!archive.loading} 
-        fallback={<div class={styles.loadingWrapper}><div class={styles.spinner}></div></div>}
+        when={!isInitialLoad()} 
+        fallback={<div class={styles.loadingWrapper}><div class={styles.spinner}></div><p>Searching the lab...</p></div>}
       >
         <div class={styles.resultsGrid}>
+          <Show when={archive.error}>
+            <div class={styles.errorState}>
+              <p>Error connecting to the lab. Please check your Firestore indexes.</p>
+              <button onClick={() => refetch()}>Retry</button>
+            </div>
+          </Show>
+
           <For each={archive()} fallback={
             <div class={styles.emptyState}>
-              <p>No discoveries found. Be the first to scan one!</p>
+              <p>{search() || category() ? "No matches found for your filters." : "The lab is empty. Be the first to scan an item!"}</p>
             </div>
           }>
             {(item, index) => (

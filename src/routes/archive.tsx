@@ -36,16 +36,8 @@ const fetchArchive = server$(async (params: { category: string, search: string }
       orderBy: [{ field: { fieldPath: "createdAt" }, direction: "DESCENDING" }]
     };
 
-    if (category && category !== "") {
-      structuredQuery.where = {
-        fieldFilter: {
-          field: { fieldPath: "category" },
-          op: "EQUAL",
-          value: { stringValue: category }
-        }
-      };
-    }
-
+    // Note: We fetch all and filter in memory for Category + Search to avoid 
+    // requiring dozens of composite indexes for every possible filter combination.
     const response = await fetch(url, {
       method: "POST",
       body: JSON.stringify({ structuredQuery }),
@@ -85,11 +77,20 @@ const fetchArchive = server$(async (params: { category: string, search: string }
         return result;
       });
 
-    if (search) {
+    // Smart Multi-Filter (In-Memory on Server)
+    if (category && category !== "") {
+      const catLower = category.toLowerCase();
+      results = results.filter((item: any) => 
+        (item.category || "").toLowerCase().includes(catLower)
+      );
+    }
+
+    if (search && search !== "") {
       const searchLower = search.toLowerCase();
       results = results.filter((item: any) => 
         (item.materialType || "").toLowerCase().includes(searchLower) ||
-        (item.itemImagePrompt || "").toLowerCase().includes(searchLower)
+        (item.itemImagePrompt || "").toLowerCase().includes(searchLower) ||
+        (item.category || "").toLowerCase().includes(searchLower)
       );
     }
 
@@ -138,7 +139,7 @@ export default function Archive() {
 
   const [selectedItem, setSelectedItem] = createSignal<any | null>(null);
 
-  const categories = ["", "Kitchen", "Electronics", "Fashion", "Home", "Garden", "Other"];
+  const categories = ["", "Kitchen", "Food", "Electronics", "Fashion", "Home", "Garden", "Packaging", "Other"];
 
   const getImageUrl = (material: string, id: string) => {
     // Using Unsplash for high-quality, reliable photography of materials
@@ -172,6 +173,12 @@ export default function Archive() {
             value={tempSearch()}
             onInput={(e) => setTempSearch(e.currentTarget.value)}
           />
+          <Show when={archive.loading}>
+            <div class={styles.searchingIndicator}>
+              <div class={styles.dotPulse}></div>
+              <span>Searching...</span>
+            </div>
+          </Show>
         </div>
         
         <div class={styles.categoryFilters}>

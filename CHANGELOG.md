@@ -2,6 +2,13 @@
 
 All notable changes to this project will be documented in this file.
 
+## [1.3.6] - 2026-05-15
+### Added
+- **Fuzzy Filtering**: Categories now use a "contains" match instead of an exact match, allowing items like "Kitchen, Food" to show up under the "Kitchen" chip.
+- **Enhanced Search Feedback**: Added a "Searching..." pulsing indicator in the search bar to show background activity during debounce.
+- **Expanded Category Chips**: Added Food, Packaging, and Garden chips to match common sustainability categories.
+- **Global Search**: The search bar now also filters by category names.
+
 ## [1.3.5] - 2026-05-15
 ### Changed
 - **REST-to-DB Architecture**: Replaced the flaky Firestore SDK with the direct Google Firestore REST API for server-side fetching. This provides 100% stability on Cloud Run by using standard HTTP instead of gRPC.

@@ -72,7 +72,7 @@ export async function analyzeImage(
 
       {
         "materialType": "type of material (e.g., Plastic, Metal, Glass, Fabric, Organic)",
-        "category": "broad category (e.g., Kitchen, Electronics, Fashion, Home, Garden)",
+        "category": "broad category (Kitchen, Food, Electronics, Fashion, Home, Garden, Packaging, or Other)",
         "itemImagePrompt": "a detailed, high-quality descriptive prompt to recreate a visual of this specific item for an AI image generator",
         "condition": "excellent|good|fair|poor",
         "usability": "reusable|consumable|repairable|recyclable",

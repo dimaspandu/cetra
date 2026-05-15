@@ -193,3 +193,55 @@
     text-transform: uppercase;
   }
 }
+
+.tutorialSection {
+  margin-top: $space-2xl;
+  
+  h3 {
+    color: $primary;
+    font-family: $font-family-heading;
+    margin-bottom: $space-lg;
+    font-size: $text-lg;
+    letter-spacing: 1px;
+  }
+}
+
+.tutorialSteps {
+  display: flex;
+  flex-direction: column;
+  gap: $space-lg;
+}
+
+.stepItem {
+  display: flex;
+  gap: $space-lg;
+  align-items: flex-start;
+
+  .stepNumber {
+    width: 32px;
+    height: 32px;
+    background: $primary;
+    color: $dark;
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-weight: bold;
+    flex-shrink: 0;
+    box-shadow: $glow-primary;
+  }
+
+  .stepContent {
+    h4 {
+      color: $light;
+      margin-bottom: 4px;
+      font-size: $text-base;
+    }
+    p {
+      color: $text-muted;
+      font-size: $text-sm;
+      line-height: 1.5;
+      margin: 0;
+    }
+  }
+}

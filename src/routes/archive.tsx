@@ -54,11 +54,20 @@ const fetchArchive = server$(async (params: { category: string, search: string }
 export default function Archive() {
   const [searchParams, setSearchParams] = useSearchParams();
   
-  // Initialize signals from URL params
+  // Local state for the input field to prevent immediate URL sync
+  const [tempSearch, setTempSearch] = createSignal(searchParams.search || "");
   const [category, setCategory] = createSignal(searchParams.category || "");
   const [search, setSearch] = createSignal(searchParams.search || "");
   
-  // Sync URL when signals change
+  // Debounce effect: sync search signal 500ms after user stops typing
+  createEffect(() => {
+    const handler = setTimeout(() => {
+      setSearch(tempSearch());
+    }, 500);
+    return () => clearTimeout(handler);
+  });
+
+  // Sync URL when search/category signals change
   createEffect(() => {
     setSearchParams({ 
       category: category() || undefined, 
@@ -82,9 +91,14 @@ export default function Archive() {
 
   const categories = ["", "Kitchen", "Electronics", "Fashion", "Home", "Garden", "Other"];
 
-  const getImageUrl = (prompt: string, id: string) => {
-    const encoded = encodeURIComponent(prompt.replace(/[^\w\s,-]/g, "").trim());
-    return `https://image.pollinations.ai/prompt/${encoded}?width=400&height=300&seed=${id}&nologo=true`;
+  const getImageUrl = (material: string, id: string) => {
+    // Using Unsplash for high-quality, reliable photography of materials
+    return `https://images.unsplash.com/photo-1532996122724-e3c354a0b15b?auto=format&fit=crop&q=80&w=800&material=${encodeURIComponent(material)}`;
+  };
+  
+  // Dynamic Material Photography (using LoremFlickr as it's more stable than Unsplash Source)
+  const getUnsplashUrl = (material: string) => {
+    return `https://loremflickr.com/800/600/${encodeURIComponent(material || "sustainability")},recycle/all`;
   };
 
   return (
@@ -106,8 +120,8 @@ export default function Archive() {
           <input 
             type="text" 
             placeholder="Search by material or item name..." 
-            value={search()}
-            onInput={(e) => setSearch(e.currentTarget.value)}
+            value={tempSearch()}
+            onInput={(e) => setTempSearch(e.currentTarget.value)}
           />
         </div>
         
@@ -152,7 +166,7 @@ export default function Archive() {
               >
                 <div class={styles.cardImageWrapper}>
                   <img 
-                    src={getImageUrl(item.itemImagePrompt, item.id)} 
+                    src={getUnsplashUrl(item.materialType)} 
                     alt={item.materialType} 
                     loading="lazy"
                     onError={(e) => {

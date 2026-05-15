@@ -30,7 +30,7 @@ export default function AnalysisModal(props: AnalysisModalProps) {
             <div class={styles.modalBody}>
               <div class={styles.imageSection}>
                 <img 
-                  src={getImageUrl(props.item.itemImagePrompt, props.item.id)} 
+                  src={`https://loremflickr.com/800/600/${encodeURIComponent(props.item.materialType || "sustainability")},recycle/all`} 
                   alt={props.item.materialType} 
                   onError={(e) => {
                     (e.target as HTMLImageElement).src = "https://images.unsplash.com/photo-1532996122724-e3c354a0b15b?auto=format&fit=crop&q=80&w=800";
@@ -72,6 +72,25 @@ export default function AnalysisModal(props: AnalysisModalProps) {
                     </For>
                   </div>
                 </div>
+
+                <Show when={props.item.tutorial && props.item.tutorial.length > 0}>
+                  <div class={styles.tutorialSection}>
+                    <h3>Preparation Guide</h3>
+                    <div class={styles.tutorialSteps}>
+                      <For each={props.item.tutorial}>
+                        {(step: any) => (
+                          <div class={styles.stepItem}>
+                            <div class={styles.stepNumber}>{step.step}</div>
+                            <div class={styles.stepContent}>
+                              <h4>{step.title}</h4>
+                              <p>{step.action}</p>
+                            </div>
+                          </div>
+                        )}
+                      </For>
+                    </div>
+                  </div>
+                </Show>
               </div>
             </div>
           </Motion.div>

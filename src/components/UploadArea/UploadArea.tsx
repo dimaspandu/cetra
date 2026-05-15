@@ -20,7 +20,8 @@ export default function UploadArea() {
     condition: "",
     usability: "",
     recyclability: "",
-    suggestions: []
+    suggestions: [],
+    tutorial: []
   });
   const [hasResult, setHasResult] = createSignal(false);
   const [error, setError] = createSignal<string | null>(null);
@@ -72,7 +73,8 @@ export default function UploadArea() {
             condition: "",
             usability: "",
             recyclability: "",
-            suggestions: []
+            suggestions: [],
+            tutorial: []
           });
           setHasResult(false);
 
@@ -165,7 +167,8 @@ export default function UploadArea() {
       condition: "",
       usability: "",
       recyclability: "",
-      suggestions: []
+      suggestions: [],
+      tutorial: []
     });
     setHasResult(false);
   };

@@ -24,6 +24,7 @@ export interface AnalysisResult {
   usability: string;
   recyclability: string;
   suggestions: Suggestion[];
+  tutorial: { step: number; title: string; action: string }[];
 }
 
 export interface Suggestion {
@@ -88,6 +89,13 @@ export async function analyzeImage(
             "impact": "environmental impact",
             "imagePrompt": "visual prompt for AI image generation of this specific suggestion"
           }
+        ],
+        "tutorial": [
+          {
+            "step": 1,
+            "title": "step title",
+            "action": "step action"
+          }
         ]
       }
 
@@ -95,6 +103,7 @@ export async function analyzeImage(
       - Give 3-5 realistic suggestions
       - Be practical and creative
       - Focus on sustainability
+      - Include a 3-step 'how-to' guide for preparing/cleaning the item
       - Return ONLY JSON
     `;
 
@@ -180,6 +189,11 @@ export async function analyzeImage(
           imageStatus: "idle",
         },
       ],
+      tutorial: [
+        { step: 1, title: "Clean", action: "Wash the item thoroughly." },
+        { step: 2, title: "Inspect", action: "Check for damages." },
+        { step: 3, title: "Prepare", action: "Remove any labels or residue." }
+      ]
     };
   }
 }

@@ -2,6 +2,17 @@
 
 All notable changes to this project will be documented in this file.
 
+## [1.3.3] - 2026-05-15
+### Added
+- **Tutorial Persistence**: AI now generates a 3-step "Preparation Guide" for every item during analysis, which is stored in Firestore for instant viewing in the archive.
+- **LoremFlickr Integration**: Switched image provider to LoremFlickr for stable, high-quality material photography in the Discovery Lab.
+- **Search Debounce**: Implemented a 500ms debounce on the search input for smooth, automatic filtering without jitter.
+
+### Fixed
+- **Image Resilience**: Re-added multi-layer `onError` fallbacks to prevent broken images in the archive grid and modal.
+- **TypeScript Alignment**: Synchronized `AnalysisResult` interfaces and initial states across the codebase to resolve build errors.
+- **Deep Linking**: Fixed `useSearchParams` hook initialization in the Archive component.
+
 ## [1.3.2] - 2026-05-15
 ### Added
 - **Shareable Discovery Lab**: Implemented URL query parameter synchronization (category and search) for shareable filtered views.

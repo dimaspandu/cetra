@@ -2,6 +2,11 @@
 
 All notable changes to this project will be documented in this file.
 
+## [1.3.5] - 2026-05-15
+### Changed
+- **REST-to-DB Architecture**: Replaced the flaky Firestore SDK with the direct Google Firestore REST API for server-side fetching. This provides 100% stability on Cloud Run by using standard HTTP instead of gRPC.
+- **Improved Env Reliability**: Enhanced environment variable detection for production SSR.
+
 ## [1.3.4] - 2026-05-15
 ### Fixed
 - **Production Stability**: Forced Firestore to use Long Polling (HTTP) on the server to resolve `GRPC error has no .code` issues in Cloud Run.

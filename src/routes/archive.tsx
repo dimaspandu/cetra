@@ -19,22 +19,71 @@ import { collection, query, where, orderBy, getDocs, Timestamp } from "firebase/
 const fetchArchive = server$(async (params: { category: string, search: string }) => {
   const { category, search } = params;
   
+  const projectId = import.meta.env.VITE_FIREBASE_PROJECT_ID || process.env.VITE_FIREBASE_PROJECT_ID;
+  const apiKey = import.meta.env.VITE_FIREBASE_API_KEY || process.env.VITE_FIREBASE_API_KEY;
+
+  if (!projectId) {
+    throw new Error("Missing VITE_FIREBASE_PROJECT_ID environment variable.");
+  }
+
   try {
-    let q = query(collection(db, "analyses"), orderBy("createdAt", "desc"));
+    // Firestore REST API URL
+    // We use a structured query to handle ordering and filtering
+    const url = `https://firestore.googleapis.com/v1/projects/${projectId}/databases/(default)/documents:runQuery?key=${apiKey}`;
     
+    const structuredQuery: any = {
+      from: [{ collectionId: "analyses" }],
+      orderBy: [{ field: { fieldPath: "createdAt" }, direction: "DESCENDING" }]
+    };
+
     if (category && category !== "") {
-      q = query(q, where("category", "==", category));
+      structuredQuery.where = {
+        fieldFilter: {
+          field: { fieldPath: "category" },
+          op: "EQUAL",
+          value: { stringValue: category }
+        }
+      };
     }
-    
-    const querySnapshot = await getDocs(q);
-    let results = querySnapshot.docs.map(doc => {
-      const data = doc.data();
-      return { 
-        id: doc.id, 
-        ...data,
-        createdAt: data.createdAt instanceof Timestamp ? data.createdAt.toDate().toISOString() : null
-      } as any;
+
+    const response = await fetch(url, {
+      method: "POST",
+      body: JSON.stringify({ structuredQuery }),
     });
+
+    if (!response.ok) {
+      const errorData = await response.json();
+      throw new Error(errorData[0]?.error?.message || "Firestore REST API error");
+    }
+
+    const data = await response.json();
+    
+    // Parse Firestore REST format (it's slightly different from SDK)
+    let results = data
+      .filter((doc: any) => doc.document)
+      .map((doc: any) => {
+        const fields = doc.document.fields;
+        const parseValue = (val: any): any => {
+          if (val.stringValue) return val.stringValue;
+          if (val.integerValue) return parseInt(val.integerValue);
+          if (val.timestampValue) return val.timestampValue;
+          if (val.arrayValue) return val.arrayValue.values?.map(parseValue) || [];
+          if (val.mapValue) {
+            const obj: any = {};
+            for (const k in val.mapValue.fields) {
+              obj[k] = parseValue(val.mapValue.fields[k]);
+            }
+            return obj;
+          }
+          return null;
+        };
+
+        const result: any = { id: doc.document.name.split("/").pop() };
+        for (const key in fields) {
+          result[key] = parseValue(fields[key]);
+        }
+        return result;
+      });
 
     if (search) {
       const searchLower = search.toLowerCase();
@@ -46,9 +95,8 @@ const fetchArchive = server$(async (params: { category: string, search: string }
 
     return results as ArchiveItem[];
   } catch (e: any) {
-    console.error("SERVER FUNCTION DIRECT DB ERROR:", e);
-    // Throwing instead of returning [] so the UI can catch it in archive.error
-    throw new Error(e.message || "Failed to connect to the Discovery Lab database.");
+    console.error("FIRESTORE REST ERROR:", e);
+    throw new Error(e.message || "Failed to fetch data from the sustainability lab.");
   }
 });
 

@@ -24,7 +24,11 @@ const fetchArchive = async ({ category, search }: { category: string, search: st
   `;
 
   // Absolute URL is required for server-side fetch in SolidStart
-  const baseUrl = typeof window !== "undefined" ? "" : "http://localhost:3000";
+  let baseUrl = "";
+  if (typeof window === "undefined") {
+    // Priority: Env Var > Internal Port > Default Localhost
+    baseUrl = import.meta.env.VITE_SITE_URL || `http://localhost:${process.env.PORT || 3000}`;
+  }
 
   const response = await fetch(`${baseUrl}/api/graphql`, {
     method: "POST",

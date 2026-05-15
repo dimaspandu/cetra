@@ -11,6 +11,11 @@ const schema = makeExecutableSchema({
 const yoga = createYoga({
   schema,
   context: ({ request }) => ({ request }),
+  maskedErrors: process.env.NODE_ENV !== "production" ? false : {
+    maskError(error: any) {
+      return error; // Temporarily show errors in prod too for debugging
+    }
+  },
 });
 
 export const GET = yoga;

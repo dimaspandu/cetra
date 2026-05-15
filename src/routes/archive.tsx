@@ -1,5 +1,7 @@
-import { createResource, For, Show, createSignal } from "solid-js";
+import { createResource, For, Show, createSignal, createEffect } from "solid-js";
+import { useSearchParams } from "@solidjs/router";
 import { Motion } from "solid-motionone";
+import AnalysisModal from "../components/AnalysisModal/AnalysisModal";
 import styles from "./archive.module.scss";
 
 interface ArchiveItem {
@@ -10,54 +12,73 @@ interface ArchiveItem {
   createdAt: string;
 }
 
-const fetchArchive = async ({ category, search }: { category: string, search: string }) => {
-  const query = `
-    query GetArchive($category: String, $search: String) {
-      archive(category: $category, search: $search) {
-        id
-        materialType
-        category
-        itemImagePrompt
-        createdAt
-      }
+import server$ from "solid-start/server";
+import { db } from "../firebase/config";
+import { collection, query, where, orderBy, getDocs, Timestamp } from "firebase/firestore";
+
+const fetchArchive = server$(async (params: { category: string, search: string }) => {
+  const { category, search } = params;
+  
+  try {
+    let q = query(collection(db, "analyses"), orderBy("createdAt", "desc"));
+    
+    if (category && category !== "") {
+      q = query(q, where("category", "==", category));
     }
-  `;
+    
+    const querySnapshot = await getDocs(q);
+    let results = querySnapshot.docs.map(doc => {
+      const data = doc.data();
+      return { 
+        id: doc.id, 
+        ...data,
+        createdAt: data.createdAt instanceof Timestamp ? data.createdAt.toDate().toISOString() : null
+      } as any;
+    });
 
-  // Absolute URL is required for server-side fetch in SolidStart
-  let baseUrl = "";
-  if (typeof window === "undefined") {
-    // Priority: Env Var > Internal Port > Default Localhost
-    baseUrl = import.meta.env.VITE_SITE_URL || `http://localhost:${process.env.PORT || 3000}`;
+    if (search) {
+      const searchLower = search.toLowerCase();
+      results = results.filter((item: any) => 
+        (item.materialType || "").toLowerCase().includes(searchLower) ||
+        (item.itemImagePrompt || "").toLowerCase().includes(searchLower)
+      );
+    }
+
+    return results as ArchiveItem[];
+  } catch (e: any) {
+    console.error("SERVER FUNCTION DIRECT DB ERROR:", e);
+    return [] as ArchiveItem[];
   }
-
-  const response = await fetch(`${baseUrl}/api/graphql`, {
-    method: "POST",
-    headers: { "Content-Type": "application/json" },
-    body: JSON.stringify({
-      query,
-      variables: { category: category || null, search: search || null }
-    }),
-  });
-
-  const { data, errors } = await response.json();
-  if (errors) {
-    throw new Error(errors[0].message);
-  }
-  return data.archive as ArchiveItem[];
-};
+});
 
 export default function Archive() {
-  const [category, setCategory] = createSignal("");
-  const [search, setSearch] = createSignal("");
+  const [searchParams, setSearchParams] = useSearchParams();
   
+  // Initialize signals from URL params
+  const [category, setCategory] = createSignal(searchParams.category || "");
+  const [search, setSearch] = createSignal(searchParams.search || "");
+  
+  // Sync URL when signals change
+  createEffect(() => {
+    setSearchParams({ 
+      category: category() || undefined, 
+      search: search() || undefined 
+    }, { replace: true });
+  });
+
   const [archive, { mutate, refetch }] = createResource(
     () => ({ category: category(), search: search() }),
     fetchArchive
   );
 
   // Helper to check if we have any results
-  const hasResults = () => archive() && archive()!.length > 0;
+  const hasResults = () => {
+    const data = archive();
+    return Array.isArray(data) && data.length > 0;
+  };
   const isInitialLoad = () => archive.loading && !archive();
+
+  const [selectedItem, setSelectedItem] = createSignal<any | null>(null);
 
   const categories = ["", "Kitchen", "Electronics", "Fashion", "Home", "Garden", "Other"];
 
@@ -130,7 +151,14 @@ export default function Archive() {
                 transition={{ duration: 0.4, delay: index() * 0.05 }}
               >
                 <div class={styles.cardImageWrapper}>
-                  <img src={getImageUrl(item.itemImagePrompt, item.id)} alt={item.materialType} loading="lazy" />
+                  <img 
+                    src={getImageUrl(item.itemImagePrompt, item.id)} 
+                    alt={item.materialType} 
+                    loading="lazy"
+                    onError={(e) => {
+                      (e.target as HTMLImageElement).src = "https://images.unsplash.com/photo-1532996122724-e3c354a0b15b?auto=format&fit=crop&q=80&w=800";
+                    }}
+                  />
                   <span class={styles.categoryBadge}>{item.category}</span>
                 </div>
                 <div class={styles.cardContent}>
@@ -141,13 +169,23 @@ export default function Archive() {
                   <span class={styles.date}>
                     {item.createdAt ? new Date(item.createdAt).toLocaleDateString() : "Recently"}
                   </span>
-                  <button class={styles.viewBtn}>View Analysis</button>
+                  <button 
+                    class={styles.viewBtn}
+                    onClick={() => setSelectedItem(item)}
+                  >
+                    View Analysis
+                  </button>
                 </div>
               </Motion.div>
             )}
           </For>
         </div>
       </Show>
+
+      <AnalysisModal 
+        item={selectedItem()} 
+        onClose={() => setSelectedItem(null)} 
+      />
     </main>
   );
 }

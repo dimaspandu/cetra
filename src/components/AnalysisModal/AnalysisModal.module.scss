@@ -1,0 +1,195 @@
+@import "../../styles/abstracts/variables";
+@import "../../styles/abstracts/mixins";
+
+.modalOverlay {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background: rgba($dark, 0.85);
+  backdrop-filter: blur(10px);
+  z-index: 1000;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: $space-md;
+}
+
+.modalContent {
+  @include glassmorphism(20px, 0.05);
+  background: $gradient-surface;
+  width: 100%;
+  max-width: 900px;
+  max-height: 90vh;
+  border-radius: $radius-xl;
+  position: relative;
+  overflow: hidden;
+  border: 1px solid rgba($primary, 0.2);
+  box-shadow: 0 0 50px rgba(0, 0, 0, 0.5);
+  display: flex;
+  flex-direction: column;
+}
+
+.closeBtn {
+  position: absolute;
+  top: $space-md;
+  right: $space-md;
+  background: rgba($dark, 0.5);
+  border: 1px solid rgba($light, 0.1);
+  color: $light;
+  width: 40px;
+  height: 40px;
+  border-radius: 50%;
+  font-size: 1.5rem;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+  z-index: 10;
+  transition: all $transition-fast;
+
+  &:hover {
+    background: $primary;
+    color: $dark;
+    transform: rotate(90deg);
+  }
+}
+
+.modalBody {
+  overflow-y: auto;
+  flex-grow: 1;
+  padding-bottom: $space-xl;
+
+  &::-webkit-scrollbar {
+    width: 6px;
+  }
+  &::-webkit-scrollbar-track {
+    background: transparent;
+  }
+  &::-webkit-scrollbar-thumb {
+    background: rgba($primary, 0.2);
+    border-radius: 3px;
+  }
+}
+
+.imageSection {
+  position: relative;
+  width: 100%;
+  height: 350px;
+  overflow: hidden;
+
+  img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+  }
+
+  .imageOverlay {
+    position: absolute;
+    bottom: 0;
+    left: 0;
+    width: 100%;
+    padding: $space-xl;
+    background: linear-gradient(to top, rgba($dark, 0.9), transparent);
+
+    h2 {
+      font-family: $font-family-heading;
+      color: $primary;
+      margin-top: $space-xs;
+      text-transform: uppercase;
+      letter-spacing: 2px;
+      font-size: $text-2xl;
+    }
+  }
+}
+
+.categoryBadge {
+  background: rgba($primary, 0.2);
+  color: $primary;
+  padding: $space-xs $space-md;
+  border-radius: $radius-sm;
+  font-size: $text-xs;
+  text-transform: uppercase;
+  letter-spacing: 1px;
+  border: 1px solid rgba($primary, 0.3);
+}
+
+.detailsSection {
+  padding: $space-xl;
+}
+
+.gridInfo {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+  gap: $space-md;
+  margin-bottom: $space-2xl;
+}
+
+.infoCard {
+  background: rgba($light, 0.03);
+  padding: $space-md;
+  border-radius: $radius-md;
+  border: 1px solid rgba($light, 0.05);
+
+  label {
+    display: block;
+    color: $text-muted;
+    font-size: $text-xs;
+    text-transform: uppercase;
+    margin-bottom: $space-xs;
+    letter-spacing: 1px;
+  }
+
+  p {
+    color: $light;
+    font-weight: 500;
+  }
+}
+
+.suggestionsSection {
+  h3 {
+    color: $primary;
+    font-family: $font-family-heading;
+    margin-bottom: $space-lg;
+    font-size: $text-lg;
+    letter-spacing: 1px;
+  }
+}
+
+.suggestionsList {
+  display: flex;
+  flex-direction: column;
+  gap: $space-md;
+}
+
+.suggestionItem {
+  background: rgba($primary, 0.05);
+  padding: $space-lg;
+  border-radius: $radius-lg;
+  border: 1px solid rgba($primary, 0.1);
+  position: relative;
+
+  h4 {
+    color: $secondary;
+    margin-bottom: $space-xs;
+    font-size: $text-base;
+  }
+
+  p {
+    color: $text-muted;
+    font-size: $text-sm;
+    line-height: 1.6;
+    margin-bottom: $space-md;
+  }
+
+  .impactBadge {
+    display: inline-block;
+    background: rgba($secondary, 0.1);
+    color: $secondary;
+    font-size: $text-xs;
+    padding: 2px 8px;
+    border-radius: 4px;
+    text-transform: uppercase;
+  }
+}

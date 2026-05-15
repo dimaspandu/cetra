@@ -2,6 +2,20 @@
 
 All notable changes to this project will be documented in this file.
 
+## [1.3.2] - 2026-05-15
+### Added
+- **Shareable Discovery Lab**: Implemented URL query parameter synchronization (category and search) for shareable filtered views.
+- **Analysis Detail Modal**: Added a premium glassmorphism modal to view full scan results, including recyclability details and all reuse suggestions.
+- **Image Resilience**: Added automatic fallback placeholders for broken AI-generated images.
+
+### Changed
+- **Direct-to-DB Architecture**: Refactored Archive fetching to use direct Firestore access inside `server$` functions, eliminating flaky HTTP self-fetches.
+- **Enhanced Debugging**: Unmasked GraphQL errors in development and added detailed server-side Firestore error logging.
+
+### Fixed
+- Fixed 'read-only property params' error in SolidStart by bypassing the network layer for internal data fetching.
+- Fixed 'All' category filtering to correctly return the full archive list.
+
 ## [1.3.1] - 2026-05-15
 ### Added
 - **Client-Side Optimization**: Implemented image compression and resizing (max 1024px) before upload to reduce network latency.

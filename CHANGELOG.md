@@ -2,6 +2,12 @@
 
 All notable changes to this project will be documented in this file.
 
+## [1.3.4] - 2026-05-15
+### Fixed
+- **Production Stability**: Forced Firestore to use Long Polling (HTTP) on the server to resolve `GRPC error has no .code` issues in Cloud Run.
+- **Robust Config**: Enhanced Firebase initialization to correctly detect environment variables in SSR environments.
+- **Error Visibility**: Unmasked Firestore error messages in the Discovery Lab to facilitate production debugging.
+
 ## [1.3.3] - 2026-05-15
 ### Added
 - **Tutorial Persistence**: AI now generates a 3-step "Preparation Guide" for every item during analysis, which is stored in Firestore for instant viewing in the archive.

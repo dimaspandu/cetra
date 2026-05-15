@@ -47,7 +47,8 @@ const fetchArchive = server$(async (params: { category: string, search: string }
     return results as ArchiveItem[];
   } catch (e: any) {
     console.error("SERVER FUNCTION DIRECT DB ERROR:", e);
-    return [] as ArchiveItem[];
+    // Throwing instead of returning [] so the UI can catch it in archive.error
+    throw new Error(e.message || "Failed to connect to the Discovery Lab database.");
   }
 });
 
@@ -147,8 +148,9 @@ export default function Archive() {
         <div class={styles.resultsGrid}>
           <Show when={archive.error}>
             <div class={styles.errorState}>
-              <p>Error connecting to the lab. Please check your Firestore indexes.</p>
-              <button onClick={() => refetch()}>Retry</button>
+              <p>Error: {archive.error.message}</p>
+              <p class={styles.errorHint}>This usually means you need to create a composite index in Firebase Console. Check Cloud Run logs for the link.</p>
+              <button onClick={() => refetch()} class={styles.retryBtn}>Retry Connection</button>
             </div>
           </Show>
 

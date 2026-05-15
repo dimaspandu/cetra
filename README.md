@@ -81,10 +81,9 @@ Not everything discarded has lost its value. CETRA is an AI-powered sustainabili
 ## Tech Stack
 
 - **Frontend**: SolidStart, SolidJS, TypeScript, SCSS Modules
-- **Backend**: GraphQL Yoga
-- **Database**: Firebase Firestore
-- **Storage**: Firebase Storage
-- **AI**: Gemini API (Vision + Intelligence)
+- **Backend**: GraphQL Yoga (for Discovery) & REST API (for Analysis)
+- **Database**: Firebase Firestore (Archiving & History)
+- **AI**: Gemini API (Vision + Intelligence) & Pollinations.ai (Visual concept generation)
 - **Animations**: Motion One
 
 ## Project Structure
@@ -96,25 +95,19 @@ src/
 ├── firebase/        # Firebase configuration
 ├── graphql/         # GraphQL schema and resolvers
 ├── lib/             # Utility functions
-├── pages/           # Page components (if needed)
-├── routes/          # File-based routing
+├── routes/          # File-based routing (Home, Discovery Lab, API)
 ├── styles/          # SCSS architecture
-│   ├── abstracts/   # Variables, mixins, animations
-│   ├── base/        # Reset, globals, typography
-│   ├── components/  # Component-specific styles
-│   ├── layouts/     # Layout styles
-│   └── pages/       # Page-specific styles
-└── root.tsx         # App root
+└── root.tsx         # App root & Navigation
 ```
 
 ## Features
 
-- Drag & drop image upload
-- AI-powered object analysis
-- Reuse suggestions (DIY, recipes, resale, etc.)
-- Cinematic UI with animations
-- Sustainability impact tracking
-- Community sharing (planned)
+- **AI Object Scanning**: Drag & drop image analysis using Gemini Vision.
+- **Discovery Lab**: Searchable community archive to browse previous scans.
+- **Smart Categorization**: Automatic tagging of items (Kitchen, Electronics, etc.).
+- **Visual Concepting**: Re-generation of item visuals via AI prompts (no storage required).
+- **Sustainability Impact**: Quantifiable impact for each reuse suggestion.
+- **Tutorial Generation**: Step-by-step guides for upcycling projects.
 
 ## Contributing
 

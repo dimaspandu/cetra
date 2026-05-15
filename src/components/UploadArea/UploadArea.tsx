@@ -14,6 +14,8 @@ export default function UploadArea() {
   // Use createStore for deeply nested reactivity
   const [result, setResult] = createStore<AnalysisResult>({
     materialType: "",
+    category: "",
+    itemImagePrompt: "",
     condition: "",
     usability: "",
     recyclability: "",
@@ -53,6 +55,8 @@ export default function UploadArea() {
         setError(null);
         setResult({
           materialType: "",
+          category: "",
+          itemImagePrompt: "",
           condition: "",
           usability: "",
           recyclability: "",
@@ -145,6 +149,8 @@ export default function UploadArea() {
     setUploadedImage(null);
     setResult({
       materialType: "",
+      category: "",
+      itemImagePrompt: "",
       condition: "",
       usability: "",
       recyclability: "",

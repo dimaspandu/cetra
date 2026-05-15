@@ -2,6 +2,23 @@
 
 All notable changes to this project will be documented in this file.
 
+## [1.3.0] - 2026-05-15
+### Added
+- **Discovery Lab**: A new searchable archive of AI-scanned items.
+- **GraphQL Integration**: Implemented GraphQL Yoga for Discovery Lab queries (filtering, searching, and list management).
+- **History/Archive Persistence**: All successful scans are now automatically archived in Firebase Firestore.
+- **Premium Navigation**: Added a floating, glassmorphism-style global navigation bar.
+- **Visual Prompting**: Items are now archived with "itemImagePrompt" strings to regenerate visuals on-the-fly, saving storage costs.
+
+### Changed
+- **Hybrid Architecture**: Switched to a robust Hybrid model using REST for heavy image analysis payloads and GraphQL for data-rich discovery features.
+- **AI Enhancement**: Updated Gemini prompts to provide deeper categorization (e.g., Kitchen, Electronics) and detailed visual descriptions.
+
+### Fixed
+- Fixed SSR (Server-Side Rendering) fetch issues by implementing absolute URL detection in SolidStart.
+- Fixed layout overlap issues between the fixed navigation bar and page content.
+- Resolved various TypeScript alignment issues across components and resolvers.
+
 ## [1.2.2] - 2026-05-12
 ### Added
 - Activated the learn more button to fetch suggestion's tutorial

@@ -28,6 +28,15 @@ export default function Root() {
         />
       </Head>
       <Body>
+        <nav class="main-nav">
+          <div class="nav-content">
+            <a href="/" class="nav-logo">CETRA</a>
+            <div class="nav-links">
+              <a href="/">Home</a>
+              <a href="/archive">Discovery Lab</a>
+            </div>
+          </div>
+        </nav>
         <Suspense>
           <ErrorBoundary>
             <Routes>

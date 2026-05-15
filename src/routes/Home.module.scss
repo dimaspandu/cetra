@@ -1,0 +1,117 @@
+@import "../styles/abstracts/variables";
+@import "../styles/abstracts/mixins";
+
+.results-section {
+  margin-top: $space-xl;
+  max-width: 1400px;
+  margin-left: auto;
+  margin-right: auto;
+  padding: 0 $space-md;
+
+  @include respond-to("desktop") {
+    padding: 0 $space-xl;
+  }
+}
+
+.scoreSection {
+  display: flex;
+  justify-content: center;
+  margin-bottom: $space-lg;
+}
+
+.indicatorsSection {
+  margin-bottom: $space-lg;
+
+  h4 {
+    color: $light;
+    margin-bottom: $space-md;
+    font-weight: 500;
+    text-align: center;
+  }
+}
+
+.badges {
+  display: flex;
+  flex-wrap: wrap;
+  gap: $space-md;
+  justify-content: center;
+}
+
+.badge {
+  display: flex;
+  align-items: center;
+  gap: $space-sm;
+  color: $text-muted;
+  font-size: $text-sm;
+  background: rgba(#0a0e17, 0.5);
+  padding: $space-sm $space-md;
+  border-radius: $radius-md;
+  border: 1px solid rgba($secondary, 0.1);
+
+  .badgeIcon {
+    font-size: 1.2rem;
+  }
+}
+
+.suggestionsGrid {
+  display: grid;
+  grid-template-columns: 1fr;
+  gap: $space-md;
+  margin-bottom: $space-lg;
+  max-width: 1200px;
+  margin-left: auto;
+  margin-right: auto;
+  padding: 0 $space-md;
+
+  @include respond-to("tablet") {
+    grid-template-columns: 1fr 1fr;
+  }
+
+  @include respond-to("desktop") {
+    grid-template-columns: 1fr 1fr 1fr;
+    padding: 0 $space-xl;
+  }
+}
+
+.uploadNewButton {
+  @include button-primary;
+  display: block;
+  margin: 0 auto;
+  padding: $space-md $space-xl;
+  font-size: $text-lg;
+  text-transform: uppercase;
+  letter-spacing: 1px;
+  background: rgba($primary, 0.1);
+  color: $primary;
+  border: 1px solid rgba($primary, 0.5);
+
+  &:hover {
+    background: rgba($primary, 0.2);
+    box-shadow: $glow-primary;
+  }
+}
+
+.error-message {
+  text-align: center;
+  color: #ff6b6b;
+  background: rgba(#ff6b6b, 0.1);
+  padding: $space-md;
+  border-radius: $radius-md;
+  border: 1px solid rgba(#ff6b6b, 0.3);
+  margin-top: $space-xl;
+
+  p {
+    margin-bottom: $space-md;
+  }
+
+  button {
+    @include button-primary;
+    background: rgba(#ff6b6b, 0.2);
+    color: #ff6b6b;
+    border: 1px solid rgba(#ff6b6b, 0.5);
+
+    &:hover {
+      background: rgba(#ff6b6b, 0.3);
+    }
+  }
+}

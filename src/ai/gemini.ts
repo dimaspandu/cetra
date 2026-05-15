@@ -18,6 +18,8 @@ function getGenAI() {
 
 export interface AnalysisResult {
   materialType: string;
+  category: string;
+  itemImagePrompt: string;
   condition: string;
   usability: string;
   recyclability: string;
@@ -68,7 +70,9 @@ export async function analyzeImage(
       Return ONLY a valid JSON object with this exact structure:
 
       {
-        "materialType": "type of material",
+        "materialType": "type of material (e.g., Plastic, Metal, Glass, Fabric, Organic)",
+        "category": "broad category (e.g., Kitchen, Electronics, Fashion, Home, Garden)",
+        "itemImagePrompt": "a detailed, high-quality descriptive prompt to recreate a visual of this specific item for an AI image generator",
         "condition": "excellent|good|fair|poor",
         "usability": "reusable|consumable|repairable|recyclable",
         "recyclability": "high|medium|low|none",
@@ -82,7 +86,7 @@ export async function analyzeImage(
             "tools": ["tool1", "tool2"],
             "value": "estimated value",
             "impact": "environmental impact",
-            "imagePrompt": "visual prompt for AI image generation"
+            "imagePrompt": "visual prompt for AI image generation of this specific suggestion"
           }
         ]
       }
@@ -143,6 +147,8 @@ export async function analyzeImage(
 
     return {
       materialType: "unknown",
+      category: "Home",
+      itemImagePrompt: "a simple household object on a clean background, futuristic eco-style",
       condition: "good",
       usability: "reusable",
       recyclability: "medium",

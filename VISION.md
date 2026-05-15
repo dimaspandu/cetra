@@ -32,15 +32,16 @@ The entire application is built around one mesmerizing interaction:
 2. **The Understanding**: An immersive scanning animation plays. The AI instantly identifies the material, its condition, and its properties.
 3. **The Reveal**: The interface elegantly transitions to reveal possibilities. The bottle isn't trash; it's a "Self-Watering Planter," a "Terrarium," or an "Aesthetic Water Carafe."
 4. **The Action**: The user is presented with generated, step-by-step DIY tutorials, difficulty estimations, and the quantifiable sustainability impact (e.g., "$15 saved, 1kg CO2 prevented").
-5. **The Community**: The user saves the idea or publishes their own transformation, inspiring others.
+35. **The Community Lab**: The user explores a searchable archive of shared discoveries, finding inspiration from how others have reimagined similar materials without needing to scan anything.
 
 ## Technical Foundations
 
-To deliver this magical experience, the architecture must be fast, modern, and robust:
+To deliver this magical experience, the architecture is fast, hybrid, and robust:
 
-- **Frontend**: SolidStart & SolidJS for lightning-fast reactivity, combined with Motion One for cinematic animations. Modular SCSS ensures bespoke, high-performance styling without generic utility classes.
-- **AI Engine**: Google Gemini API & Gemini Vision power the core intelligence—delivering instant object recognition, creative reasoning, and structured data generation.
-- **Backend & Data**: GraphQL Yoga provides a flexible data layer, while Firebase Firestore & Storage handle real-time data and media seamlessly.
+- **Frontend**: SolidStart & SolidJS for lightning-fast reactivity, combined with Motion One for cinematic animations. Bespoke SCSS modules ensure high-performance styling.
+- **AI Engine**: Google Gemini Vision powers the core object recognition and creative reasoning. Pollinations.ai is utilized for real-time visual concept generation.
+- **Hybrid Backend**: A robust combination of **REST API** (for high-bandwidth image analysis) and **GraphQL Yoga** (for complex community archive querying).
+- **Persistence**: Firebase Firestore acts as the global "Sustainability Ledger," archiving discoveries in real-time.
 
 ### System Architecture Diagram
 

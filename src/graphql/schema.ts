@@ -18,13 +18,17 @@ export const typeDefs = gql`
     id: ID!
     uploadId: ID!
     materialType: String!
+    category: String!
+    itemImagePrompt: String!
     condition: String!
     usability: String!
     recyclability: String!
     suggestions: [Suggestion!]!
+    createdAt: String
   }
 
   type Suggestion {
+    id: ID!
     type: String! # reuse, recipe, diy, resale, donation, recycling
     title: String!
     description: String!
@@ -33,6 +37,7 @@ export const typeDefs = gql`
     tools: [String!]
     value: String
     impact: String
+    imagePrompt: String
   }
 
   type Tutorial {
@@ -48,11 +53,12 @@ export const typeDefs = gql`
     uploads(userId: ID!): [Upload!]!
     analyses(uploadId: ID!): [Analysis!]!
     tutorials(analysisId: ID!): [Tutorial!]!
+    archive(category: String, search: String): [Analysis!]!
   }
 
   type Mutation {
     uploadImage(userId: ID!, image: Upload!): Upload!
-    analyzeImage(uploadId: ID!): Analysis!
+    analyzeImage(uploadId: ID!, imageBase64: String!): Analysis!
     generateTutorial(analysisId: ID!): Tutorial!
   }
 `;

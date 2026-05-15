@@ -24,31 +24,37 @@ export const resolvers = {
       return querySnapshot.docs.map(doc => ({ id: doc.id, ...doc.data() }));
     },
     archive: async (_parent: any, { category, search }: any) => {
-      let q = query(collection(db, "analyses"), orderBy("createdAt", "desc"));
-      
-      if (category && category !== "") {
-        q = query(q, where("category", "==", category));
-      }
-      
-      const querySnapshot = await getDocs(q);
-      let results = querySnapshot.docs.map(doc => {
-        const data = doc.data();
-        return { 
-          id: doc.id, 
-          ...data,
-          createdAt: data.createdAt instanceof Timestamp ? data.createdAt.toDate().toISOString() : null
-        } as any; // Cast to any to allow filtering on dynamic properties
-      });
+      try {
+        let q = query(collection(db, "analyses"), orderBy("createdAt", "desc"));
+        
+        if (category && category !== "") {
+          q = query(q, where("category", "==", category));
+        }
+        
+        const querySnapshot = await getDocs(q);
+        let results = querySnapshot.docs.map(doc => {
+          const data = doc.data();
+          return { 
+            id: doc.id, 
+            ...data,
+            createdAt: data.createdAt instanceof Timestamp ? data.createdAt.toDate().toISOString() : null
+          } as any;
+        });
 
-      if (search) {
-        const searchLower = search.toLowerCase();
-        results = (results as any[]).filter(item => 
-          (item.materialType || "").toLowerCase().includes(searchLower) ||
-          (item.itemImagePrompt || "").toLowerCase().includes(searchLower)
-        );
-      }
+        if (search) {
+          const searchLower = search.toLowerCase();
+          results = (results as any[]).filter(item => 
+            (item.materialType || "").toLowerCase().includes(searchLower) ||
+            (item.itemImagePrompt || "").toLowerCase().includes(searchLower)
+          );
+        }
 
-      return results;
+        return results;
+      } catch (error: any) {
+        console.error("FIRESTORE ARCHIVE ERROR:", error);
+        // Throw a cleaner error for GraphQL to pass through
+        throw new Error(error.message || "Failed to fetch archive from Firestore");
+      }
     },
     tutorials: async (_parent: any, { analysisId }: any) => {
       return [];

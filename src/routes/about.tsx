@@ -10,6 +10,14 @@ export default function About() {
           Circular Economy & Transformative Reuse Assistant. <br/>
           AI that sees value before you throw it away.
         </p>
+        <div class={`${styles.heroImageWrapper} ${styles.delay1}`}>
+          <img 
+            src="/cetra-ai-sustainability-hero.png" 
+            alt="CETRA AI Circular Economy Ecosystem and Upcycling Innovation" 
+            class={styles.heroImage} 
+            loading="lazy"
+          />
+        </div>
       </div>
 
       <div class={`${styles.missionSection} ${styles.animateFadeInUp} ${styles.delay1}`}>

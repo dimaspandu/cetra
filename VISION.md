@@ -47,77 +47,7 @@ To deliver this magical experience, the architecture is fast, hybrid, and robust
 
 ### System Architecture Diagram
 
-```plantuml
-@startuml
-skinparam handwritten true
-skinparam backgroundColor transparent
-skinparam defaultFontName Arial
-skinparam componentStyle uml2
-
-actor "User" as user
-
-package "Frontend" {
-  [SolidStart + SolidJS] as ui #LightGreen
-  [Motion One + SCSS] as motion #LightGreen
-}
-
-package "Backend" {
-  [GraphQL Yoga] as api #LightBlue
-}
-
-database "Firebase" {
-  [Firestore] as db #Orange
-  [Storage] as storage #Orange
-}
-
-cloud "Google AI" {
-  [Gemini API] as gemini #Violet
-}
-
-user --> ui : Uploads Image/Interacts
-ui --> motion : Displays Animations
-ui --> api : GraphQL Mutations/Queries
-
-api --> storage : 1. Store Image
-api --> gemini : 2. Send Image URL & Prompt
-gemini --> api : Returns JSON: Material, Condition, Ideas
-api --> db : 3. Save Analysis & Results
-api --> ui : 4. Return Data
-
-@enduml
-```
-
-### The Magical User Flow
-
-```plantuml
-@startuml
-skinparam handwritten true
-skinparam backgroundColor transparent
-skinparam defaultFontName Arial
-
-actor User as user
-participant "CETRA Client" as app #LightGreen
-participant "GraphQL API" as api #LightBlue
-participant "Gemini Vision" as ai #Violet
-
-user -> app: Drops Image (e.g., Glass Bottle)
-app --> user: Plays Cinematic Scanning Animation
-app -> api: uploadItem(image)
-api -> ai: Analyze Image + Context Prompt
-note right of ai
-  Detects: Glass Bottle
-  Condition: Intact
-  Type: Recyclable/Reusable
-end note
-ai --> api: JSON: [Terrarium, Planter, Water Carafe]
-api --> app: Returns Ideas & Sustainability Impact
-app --> user: Interface elegantly reveals possibilities
-user -> app: Selects "Self-Watering Planter"
-app -> api: getTutorial(ideaId)
-api --> app: Returns Step-by-Step Guide
-app --> user: Displays Tutorial & Impact Details
-@enduml
-```
+![System Architecture Diagram](docs/diagrams/system-architecture.png)
 
 ## The Emotional Impact
 

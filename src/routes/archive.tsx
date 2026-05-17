@@ -172,6 +172,11 @@ export default function Archive() {
             placeholder="Search by material or item name..." 
             value={tempSearch()}
             onInput={(e) => setTempSearch(e.currentTarget.value)}
+            onKeyDown={(e) => {
+              if (e.key === 'Enter') {
+                setSearch(tempSearch());
+              }
+            }}
           />
           <Show when={archive.loading}>
             <div class={styles.searchingIndicator}>

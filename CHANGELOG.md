@@ -2,6 +2,11 @@
 
 All notable changes to this project will be documented in this file.
 
+## [1.7.1] - 2026-05-17
+### Added
+- **SEO & Social Sharing**: Added comprehensive Open Graph (OG) and Twitter Card meta tags to `src/root.tsx` for optimal link sharing on platforms like LinkedIn.
+- **Documentation**: Added the live Cloud Run demo URL to the `README.md`.
+
 ## [1.7.0] - 2026-05-17
 ### Added
 - **Global Footer**: Integrated a global footer across the application featuring `#JuaraVibeCoding` event attribution and explicit credit to Google Gemini.

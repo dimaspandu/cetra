@@ -1,6 +1,6 @@
 {
   "name": "cetra",
-  "version": "0.1.0",
+  "version": "1.7.1",
   "description": "AI that sees value before you throw it away.",
   "type": "module",
   "scripts": {

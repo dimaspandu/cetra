@@ -2,6 +2,8 @@
 
 Not everything discarded has lost its value. CETRA is an AI-powered sustainability companion that bridges the imagination gap, giving you a "second sight" to see the hidden potential in everyday objects before you throw them away.
 
+🚀 **Live Demo:** [https://cetra-778142562097.asia-southeast2.run.app/](https://cetra-778142562097.asia-southeast2.run.app/)
+
 ## Setup Instructions
 
 1. **Clone the repository**

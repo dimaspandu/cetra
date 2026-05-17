@@ -1,8 +1,10 @@
 import AnalysisDashboard from "../components/AnalysisDashboard/AnalysisDashboard";
+import WelcomeModal from "../components/WelcomeModal/WelcomeModal";
 
 export default function Home() {
   return (
     <main class="home">
+      <WelcomeModal />
       <div class="particles"></div>
       <div class="hero">
         <div class="logo-wrapper">

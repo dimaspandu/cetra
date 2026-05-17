@@ -39,15 +39,30 @@
     padding: $space-xl $space-md $space-md;
 
     .logo-wrapper {
-      display: inline-block;
+      display: inline-flex;
+      flex-direction: column;
+      align-items: center;
       position: relative;
+      gap: 1.5rem;
+      margin-bottom: $space-md;
+
+      .app-logo {
+        width: 100px;
+        height: 100px;
+        border-radius: 50%;
+        object-fit: cover;
+        box-shadow: 0 0 40px rgba($primary, 0.4);
+        border: 2px solid rgba($primary, 0.3);
+        animation: float 6s ease-in-out infinite;
+        @include fade-in();
+      }
 
       &::after {
         content: "";
         position: absolute;
-        bottom: -5px;
-        left: 20%;
-        width: 60%;
+        bottom: -15px;
+        left: 25%;
+        width: 50%;
         height: 2px;
         background: $primary;
         box-shadow: $glow-primary;
@@ -57,9 +72,9 @@
 
     h1 {
       font-family: $font-family-heading;
-      font-size: 2.5rem;
-      letter-spacing: 4px;
-      margin-bottom: $space-sm;
+      font-size: 3rem;
+      letter-spacing: 6px;
+      margin-bottom: 0;
       color: $primary;
       text-shadow: $glow-primary;
       text-transform: uppercase;
@@ -84,5 +99,17 @@
 
   100% {
     background-position: -1000px 1000px;
+  }
+}
+
+@keyframes float {
+  0% {
+    transform: translateY(0);
+  }
+  50% {
+    transform: translateY(-10px);
+  }
+  100% {
+    transform: translateY(0);
   }
 }

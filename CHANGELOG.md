@@ -2,6 +2,13 @@
 
 All notable changes to this project will be documented in this file.
 
+## [1.4.0] - 2026-05-17
+### Changed
+- **Component Renamed**: Refactored `UploadArea` to `AnalysisDashboard` for a more accurate representation of its AI capabilities.
+- **Responsive Navigation**: Replaced the static header with a dedicated `<Navbar>` component. It features an animated Hamburger menu for mobile and `<A>` tags that highlight the active route.
+- **Card Consistency**: Added CSS `line-clamp` to `SuggestionCard` descriptions to ensure all AI insight cards have equal heights in the grid.
+- **Mobile UX Polish**: Reduced excessive padding in the `TutorialModal` on mobile screens to maximize reading space.
+
 ## [1.3.9] - 2026-05-15
 ### Fixed
 - **Build Failure**: Added missing SASS variables ($space-3xl and $error) to the global design system to resolve production compilation errors.

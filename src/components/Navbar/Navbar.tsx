@@ -44,6 +44,9 @@ export default function Navbar() {
           <A href="/archive" class={styles.link} activeClass={styles.active} onClick={closeMenu}>
             Discovery Lab
           </A>
+          <A href="/about" class={styles.link} activeClass={styles.active} onClick={closeMenu}>
+            About
+          </A>
         </div>
       </div>
     </nav>

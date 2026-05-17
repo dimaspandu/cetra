@@ -2,6 +2,16 @@
 
 All notable changes to this project will be documented in this file.
 
+## [1.6.0] - 2026-05-17
+### Added
+- **Welcome Modal**: Created an auto-opening, cinematic welcome guide for first-time users on the Home page, detailing the core flow.
+- **Brand Identity**: Integrated a new AI-generated app logo into the Welcome Modal to replace the temporary emoji.
+- **Instant Search Hint**: Added a `Press [Enter ↵]` visual keyboard hint inside the Discovery Lab search bar.
+- **Documentation**: Formally added an MIT `LICENSE` file and updated `README.md` and `VISION.md` to reflect recent feature additions.
+
+### Fixed
+- **Discovery Search**: Swapped out the delayed 500ms debounce behavior for instant search execution upon pressing the `Enter` key.
+
 ## [1.5.0] - 2026-05-17
 ### Added
 - **About Page**: Introduced a new cinematic About page (`/about`) that outlines CETRA's core mission to reduce household waste, empower creative upcycling, and foster a circular economy.

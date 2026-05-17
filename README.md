@@ -103,7 +103,9 @@ src/
 ## Features
 
 - **AI Object Scanning**: Drag & drop image analysis using Gemini Vision.
-- **Discovery Lab**: Searchable community archive to browse previous scans.
+- **Discovery Lab**: Searchable community archive to browse previous scans with instant enter-key search execution.
+- **Welcome Guide**: Auto-opening introductory modal for first-time users to quickly learn the magical flow.
+- **Impact & Mission**: Dedicated About page outlining CETRA's community, circular economy goals, and environmental impact.
 - **Smart Categorization**: Automatic tagging of items (Kitchen, Electronics, etc.).
 - **Visual Concepting**: Re-generation of item visuals via AI prompts (no storage required).
 - **Sustainability Impact**: Quantifiable impact for each reuse suggestion.

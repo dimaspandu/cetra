@@ -28,11 +28,13 @@ We are building a product that feels like a glimpse into a sustainable future. T
 
 The entire application is built around one mesmerizing interaction:
 
-1. **The Scan**: The user drops an image of an object (e.g., a glass bottle) onto the interface.
-2. **The Understanding**: An immersive scanning animation plays. The AI instantly identifies the material, its condition, and its properties.
-3. **The Reveal**: The interface elegantly transitions to reveal possibilities. The bottle isn't trash; it's a "Self-Watering Planter," a "Terrarium," or an "Aesthetic Water Carafe."
-4. **The Action**: The user is presented with generated, step-by-step DIY tutorials, difficulty estimations, and the quantifiable sustainability impact (e.g., "$15 saved, 1kg CO2 prevented").
-35. **The Community Lab**: The user explores a searchable archive of shared discoveries, finding inspiration from how others have reimagined similar materials without needing to scan anything.
+1. **The Welcome**: First-time users are greeted with an elegant, cinematic Welcome Modal that sets the stage, instantly explaining the "Why" and "How" of CETRA.
+2. **The Scan**: The user drops an image of an object (e.g., a glass bottle) onto the interface.
+3. **The Understanding**: An immersive scanning animation plays. The AI instantly identifies the material, its condition, and its properties.
+4. **The Reveal**: The interface elegantly transitions to reveal possibilities. The bottle isn't trash; it's a "Self-Watering Planter," a "Terrarium," or an "Aesthetic Water Carafe."
+5. **The Action**: The user is presented with generated, step-by-step DIY tutorials, difficulty estimations, and the quantifiable sustainability impact (e.g., "$15 saved, 1kg CO2 prevented").
+6. **The Community Lab**: The user explores a searchable archive of shared discoveries, finding inspiration from how others have reimagined similar materials without needing to scan anything.
+7. **The Mission (About)**: A dedicated space that emphasizes the social and environmental goals of the platform, grounding the technology in real-world community impact.
 
 ## Technical Foundations
 

@@ -111,6 +111,15 @@ src/
 - **Sustainability Impact**: Quantifiable impact for each reuse suggestion.
 - **Tutorial Generation**: Step-by-step guides for upcycling projects.
 
+## Testing
+
+The application uses `vitest` for unit testing critical logic, specifically the robust parsing of unpredictable AI JSON responses.
+
+```bash
+# Run the test suite
+pnpm test
+```
+
 ## Contributing
 
 This is a hackathon project focused on rapid prototyping and emotional sustainability experiences.

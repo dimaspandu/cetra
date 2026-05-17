@@ -2,6 +2,17 @@
 
 All notable changes to this project will be documented in this file.
 
+## [1.7.0] - 2026-05-17
+### Added
+- **Global Footer**: Integrated a global footer across the application featuring `#JuaraVibeCoding` event attribution and explicit credit to Google Gemini.
+- **Hero Logo**: Added a sleek, floating app logo above the main text on the Home page hero section.
+- **About Page Polish**: Inserted the "Our Story & Approach" section directly answering the hackathon pitch problem/solution questions, constrained by a clean max-width layout.
+- **Robustness**: Introduced `vitest` and a test suite (`gemini.test.ts`) specifically to assert the reliability of the Gemini AI JSON parsing logic.
+- **Documentation**: Swapped the PlantUML block in `VISION.md` for a rendered, static architecture diagram image.
+
+### Changed
+- **Discovery Cards**: Updated the Discovery Lab item cards to display the generated "upcycling suggestion description" rather than the raw, cryptic image generation prompt.
+
 ## [1.6.0] - 2026-05-17
 ### Added
 - **Welcome Modal**: Created an auto-opening, cinematic welcome guide for first-time users on the Home page, detailing the core flow.

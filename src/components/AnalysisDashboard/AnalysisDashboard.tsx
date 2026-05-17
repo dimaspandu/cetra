@@ -5,9 +5,9 @@ import { type AnalysisResult } from "../../ai/gemini";
 import SuggestionCard from "../SuggestionCard/SuggestionCard";
 import SustainabilityGauge from "../SustainabilityGauge/SustainabilityGauge";
 import { optimizeImage } from "../../lib/image-utils";
-import styles from "./UploadArea.module.scss";
+import styles from "./AnalysisDashboard.module.scss";
 
-export default function UploadArea() {
+export default function AnalysisDashboard() {
   const [isDragging, setIsDragging] = createSignal(false);
   const [uploadedImage, setUploadedImage] = createSignal<string | null>(null);
   const [isAnalyzing, setIsAnalyzing] = createSignal(false);

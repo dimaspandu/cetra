@@ -1,4 +1,4 @@
-import UploadArea from "../components/UploadArea/UploadArea";
+import AnalysisDashboard from "../components/AnalysisDashboard/AnalysisDashboard";
 
 export default function Home() {
   return (
@@ -10,7 +10,7 @@ export default function Home() {
         </div>
         <p>AI that sees value before you throw it away.</p>
       </div>
-      <UploadArea />
+      <AnalysisDashboard />
     </main>
   );
 }

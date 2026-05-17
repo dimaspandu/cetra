@@ -26,24 +26,24 @@ export default function About() {
       </div>
 
       <div class={`${styles.techSection} ${styles.animateFadeInUp} ${styles.delay2}`}>
-        <h2>Powered By Modern Tech</h2>
+        <h2>Community & Impact</h2>
         <div class={styles.techGrid}>
           <div class={styles.techCard}>
-            <h3>Google Gemini 1.5 Flash</h3>
+            <h3>Reduce Household Waste</h3>
             <p>
-              The core of CETRA's intelligence. Gemini provides blazing-fast, multi-modal vision analysis, instantly recognizing materials, condition, and recyclability while generating creative reuse tutorials.
+              By instantly identifying secondary uses for everyday items, we help divert usable materials from landfills and extend their natural lifecycle.
             </p>
           </div>
           <div class={styles.techCard}>
-            <h3>SolidStart & MotionOne</h3>
+            <h3>Empower Creative Upcycling</h3>
             <p>
-              Built for speed and accessibility. SolidStart provides lightning-fast rendering without virtual DOM overhead, while MotionOne powers the cinematic, glassmorphism UI interactions.
+              You don't need to be a DIY expert. CETRA breaks down complex ideas into simple, step-by-step preparation guides accessible to all ages.
             </p>
           </div>
           <div class={styles.techCard}>
-            <h3>Firebase Architecture</h3>
+            <h3>Foster a Circular Economy</h3>
             <p>
-              A robust, hybrid cloud backend using direct REST APIs for maximum stability on edge runtimes, ensuring that the Discovery Lab archive is always synchronized and searchable.
+              Through the Discovery Lab, we archive successful item transformations, creating a shared knowledge base of inspiration for a more sustainable future.
             </p>
           </div>
         </div>

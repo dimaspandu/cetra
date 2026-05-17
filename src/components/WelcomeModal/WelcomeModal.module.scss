@@ -77,9 +77,12 @@
   justify-content: center;
   margin-bottom: 1.5rem;
   box-shadow: $glow-primary;
+  overflow: hidden;
 
-  .icon {
-    font-size: 2.5rem;
+  .iconImage {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
   }
 }
 

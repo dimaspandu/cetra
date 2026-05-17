@@ -40,7 +40,11 @@ export default function WelcomeModal() {
           >
             <div class={styles.modalContent}>
               <div class={styles.iconWrapper}>
-                <span class={styles.icon}>🌱</span>
+                <img 
+                  src="/cetra-ai-sustainability-app-logo.png" 
+                  alt="CETRA AI Logo" 
+                  class={styles.iconImage} 
+                />
               </div>
               <h2 id="welcome-modal-title" class={styles.title}>
                 Welcome to CETRA

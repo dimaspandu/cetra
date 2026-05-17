@@ -53,7 +53,7 @@ export interface TutorialResult {
   references: TutorialReference[];
 }
 
-function cleanJsonResponse(text: string) {
+export function cleanJsonResponse(text: string) {
   return text.replace(/```json\n?|\n?```/g, "").trim();
 }
 

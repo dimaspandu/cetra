@@ -9,7 +9,7 @@ export default function Footer() {
             Built with 💚 for <a href="https://rsvp.withgoogle.com/events/juaravibecoding/home" target="_blank" rel="noopener noreferrer" class={styles.link}>#JuaraVibeCoding</a>
           </p>
           <p class={styles.subtext}>
-            Powered by Google Gemini 1.5 & SolidStart.
+            Powered by Google Gemini.
           </p>
         </div>
       </div>

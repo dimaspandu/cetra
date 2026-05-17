@@ -103,6 +103,30 @@
     border-radius: 50%;
     animation: pulse 1s infinite alternate;
   }
+
+  .enterHint {
+    position: absolute;
+    right: 20px;
+    top: 50%;
+    transform: translateY(-50%);
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    color: #888;
+    font-size: 0.85rem;
+    pointer-events: none;
+    animation: fadeIn 0.3s ease;
+
+    span {
+      background: rgba(255, 255, 255, 0.1);
+      border: 1px solid rgba(255, 255, 255, 0.2);
+      padding: 0.2rem 0.5rem;
+      border-radius: 6px;
+      color: #ccc;
+      font-weight: 600;
+      box-shadow: 0 2px 4px rgba(0, 0, 0, 0.3);
+    }
+  }
 }
 
 @keyframes pulse {

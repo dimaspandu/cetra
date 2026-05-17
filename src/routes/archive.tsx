@@ -184,6 +184,11 @@ export default function Archive() {
               <span>Searching...</span>
             </div>
           </Show>
+          <Show when={!archive.loading && tempSearch().length > 0 && tempSearch() !== search()}>
+            <div class={styles.enterHint}>
+              Press <span>Enter ↵</span>
+            </div>
+          </Show>
         </div>
         
         <div class={styles.categoryFilters}>

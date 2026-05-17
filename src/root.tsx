@@ -12,6 +12,7 @@ import {
   Title,
 } from "solid-start";
 import Navbar from "./components/Navbar/Navbar";
+import Footer from "./components/Footer/Footer";
 import "./styles/main.scss";
 
 export default function Root() {
@@ -38,6 +39,7 @@ export default function Root() {
             </Routes>
           </ErrorBoundary>
         </Suspense>
+        <Footer />
         <Scripts />
       </Body>
     </Html>

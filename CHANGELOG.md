@@ -2,6 +2,12 @@
 
 All notable changes to this project will be documented in this file.
 
+## [1.5.0] - 2026-05-17
+### Added
+- **About Page**: Introduced a new cinematic About page (`/about`) that outlines CETRA's core mission to reduce household waste, empower creative upcycling, and foster a circular economy.
+- **Hero Artwork**: Integrated an AI-generated, glassmorphism-style hero image representing a thriving sustainable ecosystem.
+- **Global Navigation**: Added an easy-access link to the new About page within the primary `<Navbar>`.
+
 ## [1.4.1] - 2026-05-17
 ### Fixed
 - **Mobile Readability**: Enlarged typography sizes across the dashboard, suggestion cards, and sustainability gauge to improve accessibility for elderly users on mobile devices.

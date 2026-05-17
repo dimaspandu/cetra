@@ -57,6 +57,31 @@ export default function About() {
         </div>
       </div>
 
+      <div class={`${styles.pitchSection} ${styles.animateFadeInUp} ${styles.delay3}`}>
+        <h2>Our Story & Approach</h2>
+        
+        <div class={styles.pitchBlock}>
+          <h3>The Problem We Are Solving</h3>
+          <p>
+            In a world overwhelmed by waste, we often throw things away not because they are useless, but because we lack the imagination to see what they could become. There is an "imagination gap" in household waste management. People want to be sustainable, but researching how to upcycle every specific item is too time-consuming and difficult.
+          </p>
+        </div>
+
+        <div class={styles.pitchBlock}>
+          <h3>Our Solution & Why It Works</h3>
+          <p>
+            CETRA bridges this gap by acting as a "second sight". By simply snapping a photo, our AI instantly analyzes the material and condition, immediately generating creative, step-by-step upcycling projects. It is highly effective because it removes the friction of research. It turns sustainability from a chore into an act of effortless discovery, empowering anyone to give their trash a second life.
+          </p>
+        </div>
+
+        <div class={styles.pitchBlock}>
+          <h3>What Makes CETRA Unique?</h3>
+          <p>
+            Unlike traditional recycling guides, CETRA is highly personalized, real-time, and emotionally engaging. We combine lightning-fast Gemini Vision AI with a premium, cinematic interface that inspires awe. Furthermore, every successful scan is logged into our global "Discovery Lab"—a searchable, ever-growing community archive of sustainable inspiration that proves nothing is truly waste.
+          </p>
+        </div>
+      </div>
+
       <div class={`${styles.ctaSection} ${styles.animateFadeInUp} ${styles.delay3}`}>
         <h2>Ready to reduce your waste?</h2>
         <A href="/" class={styles.ctaButton}>

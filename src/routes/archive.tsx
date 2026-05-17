@@ -9,6 +9,7 @@ interface ArchiveItem {
   materialType: string;
   category: string;
   itemImagePrompt: string;
+  suggestions?: any[];
   createdAt: string;
 }
 
@@ -244,7 +245,11 @@ export default function Archive() {
                 </div>
                 <div class={styles.cardContent}>
                   <h3 class={styles.materialTitle}>{item.materialType}</h3>
-                  <p class={styles.itemPrompt}>{item.itemImagePrompt}</p>
+                  <p class={styles.itemPrompt}>
+                    {item.suggestions && item.suggestions.length > 0 
+                      ? item.suggestions[0].description 
+                      : item.itemImagePrompt}
+                  </p>
                 </div>
                 <div class={styles.cardFooter}>
                   <span class={styles.date}>

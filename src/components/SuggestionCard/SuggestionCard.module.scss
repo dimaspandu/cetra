@@ -36,6 +36,10 @@
   color: $light;
   margin: 0;
   line-height: 1.3;
+
+  @media (max-width: 768px) {
+    font-size: 1.3rem;
+  }
 }
 
 .typeTag {
@@ -116,6 +120,11 @@
   line-clamp: 3;
   -webkit-box-orient: vertical;
   overflow: hidden;
+
+  @media (max-width: 768px) {
+    font-size: 1.1rem;
+    line-height: 1.6;
+  }
 }
 
 .impact {
@@ -150,6 +159,11 @@
   font-size: $text-sm;
   cursor: pointer;
   transition: $transition-fast;
+
+  @media (max-width: 768px) {
+    font-size: 1.1rem;
+    padding: $space-md;
+  }
 
   &:hover {
     background: rgba($primary, 0.1);

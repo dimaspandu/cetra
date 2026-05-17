@@ -2,6 +2,13 @@
 
 All notable changes to this project will be documented in this file.
 
+## [1.4.1] - 2026-05-17
+### Fixed
+- **Mobile Readability**: Enlarged typography sizes across the dashboard, suggestion cards, and sustainability gauge to improve accessibility for elderly users on mobile devices.
+- **Layout Adjustments**: Fixed collision issues between the Analysis and Insights columns on mobile by increasing the grid gap.
+- **Typography Clipping**: Prevented the "DISCOVERY LAB" title from overlapping on narrow screens by tuning font-size, line-height, and letter-spacing.
+- **UI Polish**: Centered the upload prompt text and hid redundant panel subtext on mobile to reduce visual clutter.
+
 ## [1.4.0] - 2026-05-17
 ### Changed
 - **Component Renamed**: Refactored `UploadArea` to `AnalysisDashboard` for a more accurate representation of its AI capabilities.
